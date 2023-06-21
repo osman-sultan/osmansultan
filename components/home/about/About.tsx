@@ -15,7 +15,7 @@ export const About = () => {
             <p className={`${styles.aboutText} ${styles.highlightFirstLetter}`}>
               hello world✌️, i&apos;m osman. i&apos;m a bit all over the place
               but my goal lies in making interactions between humans and tech as
-              accesible as possible. based in the greater toronto area, i
+              accessible as possible. based in the greater toronto area, i
               sometimes feel like a sponge🧽, absorbing all that I can from the
               many remarkable people around me.
             </p>
