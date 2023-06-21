@@ -17,12 +17,12 @@
   h4 {
     display: flex;
     align-items: center;
+    gap: 1.2rem;
 
     margin-bottom: 2.4rem;
     span {
       font-size: var(--text-xs);
       position: relative;
-      font-weight: lighter;
       margin-left: 0.8rem;
     }
   }
