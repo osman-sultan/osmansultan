@@ -9,7 +9,7 @@
 
     margin-bottom: 2.4rem;
     span {
-      font-size: var(--text-md);
+      font-size: var(--text-sm);
       position: relative;
       font-weight: bold;
     }
@@ -20,7 +20,7 @@
 
     margin-bottom: 2.4rem;
     span {
-      font-size: var(--text-md);
+      font-size: var(--text-xs);
       position: relative;
       font-weight: lighter;
       margin-left: 0.8rem;
@@ -34,6 +34,4 @@
   gap: 1.2rem;
 
   margin-bottom: 4.8rem;
-  /* convert all of the above to tailwindcss*/
-  @apply mb-12 flex flex-wrap gap-4;
 }
