@@ -11,10 +11,10 @@
 
   --text-xs: 1.6rem;
   --text-sm: 1.8rem;
-  --text-md: 2.2rem;
-  --text-lg: 3.6rem;
-  --text-xl: 5.6rem;
-  --text-2xl: 9.6rem;
+  --text-md: 2rem;
+  --text-lg: 3.2rem;
+  --text-xl: 5.2rem;
+  --text-2xl: 9.2rem;
 }
 
 * {
