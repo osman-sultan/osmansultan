@@ -8,9 +8,9 @@ export const Stats = () => {
     <div className={styles.stats}>
       <Reveal>
         <div className={styles.statColumn}>
-          <h3>
+          <h4>
             <span>tools i like to use:</span>
-          </h3>
+          </h4>
           <h4>
             <FaBrain size="2.4rem" color="var(--brand)" />
             <span>ml and data</span>
