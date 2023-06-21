@@ -19,7 +19,7 @@ export const Projects = () => {
 const projects = [
   {
     title: "Proompter",
-    imgSrc: "project-imgs/proompter.png",
+    imgSrc: "/project-imgs/proompter.png",
     code: "https://github.com/osman-sultan/proompter",
     projectLink: "https://projectproompter.vercel.app/",
     tech: ["Next.js 13", "TailwindCSS", "MongoDB", "NextAuth.js"],
@@ -48,7 +48,7 @@ const projects = [
   },
   {
     title: "TerraSculpt",
-    imgSrc: "project-imgs/terrasculpt.png",
+    imgSrc: "/project-imgs/terrasculpt.png",
     code: "https://github.com/osman-sultan/TerraSculpt",
     projectLink: "",
     tech: ["Python", "PyTorch", "TorchVision", "Matplotlib", "CUDA"],
@@ -86,7 +86,7 @@ const projects = [
   },
   {
     title: "Underlying Factors in Soccer Injuries",
-    imgSrc: "project-imgs/soccerinjuries.png",
+    imgSrc: "/project-imgs/soccerinjuries.png",
     code: "https://www.github.com",
     projectLink: "",
     tech: [
@@ -103,8 +103,8 @@ const projects = [
     modalContent: (
       <>
         <p>
-          In this project, inspired by Brazil's loss in the 2014 World Cup due
-          to Neymar's injury, I used machine learning to predict soccer
+          In this project, inspired by Brazil&apos;s loss in the 2014 World Cup
+          due to Neymar&apos;s injury, I used machine learning to predict soccer
           injuries, and important yet overlooked facet of the beautiful game.
         </p>
         <p>

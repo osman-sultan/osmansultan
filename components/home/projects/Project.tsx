@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/utils/Reveal";
 import { motion, useAnimation, useInView } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AiFillGithub, AiOutlineExport } from "react-icons/ai";
@@ -60,7 +61,9 @@ export const Project = ({
           onClick={() => setIsOpen(true)}
           className={styles.projectImage}
         >
-          <img
+          <Image
+            width={600}
+            height={275}
             src={imgSrc}
             alt={`An image of the ${title} project.`}
             style={{

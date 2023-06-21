@@ -49,8 +49,6 @@ export const About = () => {
                 many of my projects will revolve around the now dominant llm
                 field.
               </p>
-            </div>
-            <div>
               <p className={styles.aboutText} style={{ fontWeight: "bold" }}>
                 previously:
               </p>
@@ -65,8 +63,8 @@ export const About = () => {
                 possible
               </p>
               <p className={styles.aboutText}>
-                made STEM accesible to low-income communities with Visions of
-                Science.
+                made STEM accesible to low-income communities with visions of
+                science.
               </p>
             </div>
           </Reveal>
