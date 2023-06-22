@@ -210,7 +210,7 @@ const projects = [
           project engagements.
         </p>
         <p style={{ fontStyle: "italic" }}>
-          Going through Metro&apos;s current website, was the spark that made me
+          Going through Metro&apos;s current website was the spark that made me
           realize how significant UI/UX design and more importantly human-system
           interaction is.
         </p>
