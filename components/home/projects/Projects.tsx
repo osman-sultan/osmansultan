@@ -198,13 +198,6 @@ const projects = [
           by 25%.
         </p>
         <p>
-          I developed several models including logistic regression, random
-          forest, and an ANN. Through extensive hyperparamter tuning through
-          grid search and random search, the logistic regression model with L2
-          loss stood out, demonstrating an impressive ROC AUC of 0.726 and a
-          recall of 0.851.
-        </p>
-        <p>
           Undertook usability testing with Figma, assessing the prototype via
           qualitative and quantitative measures. The evaluation improved the
           prototype&apos;s usability by 40%, confirming its effectiveness and
