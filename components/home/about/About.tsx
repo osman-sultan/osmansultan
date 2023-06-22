@@ -17,16 +17,16 @@ export const About = () => {
               but my goal lies in making interactions between humans and tech as
               accessible as possible. based in the greater toronto area,
               i&apos;m on a constant journey fueled by curiosity, absorbing all
-              that I can from the many remarkable people around me 🚘.
+              that I can from the many remarkable people around me🚘.
             </p>
           </Reveal>
           <Reveal>
             <p className={styles.aboutText}>
               naturally, as an unfortunate victim of fomo, im a serial hobbie
               hopper. currently, my interests lie in walkable cities (as a
-              mississauga native, you could probably guess why 🛣️), cars (v8,
+              mississauga native, you could probably guess why🛣️), cars (v8,
               v10, v12 powered ones), hogwarts legacy, and the thought that
-              messi might play at bmo field ⚽.
+              messi might play at bmo field⚽.
             </p>
           </Reveal>
           <Reveal>
@@ -40,7 +40,11 @@ export const About = () => {
               </p>
               <p className={styles.aboutText}>
                 leading a team of 4 in building websites for uoft-affiliated
-                clubs/students at utfo
+                clubs/students at{" "}
+                <a href="https://utfo.ca" target="_blank">
+                  utfo
+                </a>
+                .
               </p>
               <p className={styles.aboutText}>
                 focusing summer on learning new tech like nextjs and langchain
@@ -52,19 +56,28 @@ export const About = () => {
               <p className={styles.aboutText} style={{ fontWeight: "bold" }}>
                 previously:
               </p>
-              <p className={styles.aboutText}>interned at Molex LLC as a SWE</p>
+              <p className={styles.aboutText}>
+                wrote some python backend code as a swe intern at{" "}
+                <a href="https://www.molex.com/en-us/home" target="_blank">
+                  molex
+                </a>
+                .
+              </p>
               <p className={styles.aboutText}>
                 taught some python, java, and sql i learned in highschool to
-                novice 2nd year engineering students
+                novice 2nd year engineering students.
               </p>
               <p className={styles.aboutText}>
                 lead f!rosh week twice (and hopefully a third time this
                 september), welcoming incoming 1st years in the awesomest way
-                possible
+                possible.
               </p>
               <p className={styles.aboutText}>
-                made STEM accesible to low-income communities with visions of
-                science.
+                made STEM accesible to youth in low-income communities with{" "}
+                <a href="https://www.vosnl.org/" target="_blank">
+                  visions of science
+                </a>
+                .
               </p>
             </div>
           </Reveal>
