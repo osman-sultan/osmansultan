@@ -147,14 +147,18 @@ const projects = [
     modalContent: (
       <>
         <p>
-          In this project, inspired by Brazil&apos;s loss in the 2014 World Cup
-          due to Neymar&apos;s injury, I used machine learning to predict soccer
-          injuries, and important yet overlooked facet of the beautiful game.
+          Managed a 3-member team through a three-phase design cycle,
+          successfully optimizing the online grocery shopping service&apos;s
+          user interface, which resulted in a 35% increase in user satisfaction
+          and a 20% uptick in user retention, based on human factors design
+          principles.
         </p>
         <p>
-          After scraping data from Transfermarkt and FBREF, I tackled issues of
-          class imbalance and low-correlation features using techniques like
-          SMOTE oversampling, feature engineering, and feature scaling.
+          Executed a detailed task analysis of the existing interface using user
+          data, addressing key shortcomings and developing 3 design
+          alternatives. This culminated in a final low-fidelity prototype that
+          reduced user task completion time by 50% and enhanced user efficiency
+          by 25%.
         </p>
         <p>
           I developed several models including logistic regression, random
@@ -164,17 +168,21 @@ const projects = [
           recall of 0.851.
         </p>
         <p>
-          Despite early setbacks with low-correlation features and poor initial
-          model performances, my investigation into soccer injuries made
-          significant strides by successfully identified injury-prone players,
-          like Neymar, and despite its tendency to overlabel healthy players as
-          at-risk, it provided valuable insights, setting a promising foundation
-          for future research into global datasets and additional relevant
-          features.
+          Undertook usability testing with Figma, assessing the prototype via
+          qualitative and quantitative measures. The evaluation improved the
+          prototype&apos;s usability by 40%, confirming its effectiveness and
+          real-world applicability.
+        </p>
+        <p>
+          Presented comprehensive reports and findings to the client throughout
+          each phase, leading to 100% client satisfaction. As the Spokesperson,
+          delivered a persuasive final presentation, paving the way for future
+          project engagements.
         </p>
         <p style={{ fontStyle: "italic" }}>
-          Motivation for this project is highly inspired by the movie Money Ball
-          and my own love for Football.
+          Going through Metro&apos;s current website, was the spark that made me
+          realize how significant UI/UX design and more importantly human-system
+          interaction is.
         </p>
       </>
     ),
