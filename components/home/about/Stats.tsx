@@ -25,7 +25,6 @@ export const Stats = () => {
             <span className="chip">PyTorch</span>
             <span className="chip">Langchain</span>
             <span className="chip">Hugging Face</span>
-            <span className="chip">Black (Python Linter)</span>
           </div>
         </div>
       </Reveal>
@@ -68,7 +67,9 @@ export const Stats = () => {
             <span className="chip">GitHub/GitLab</span>
             <span className="chip">Bash</span>
             <span className="chip">PowerShell</span>
-            <span className="chip">Linux (Ubuntu, WSL)</span>
+            <span className="chip">Linux</span>
+            <span className="chip">Ubuntu</span>
+            <span className="chip">WSL</span>
             <span className="chip">SQL</span>
             <span className="chip">SQLite</span>
             <span className="chip">MySQL</span>
