@@ -35,8 +35,6 @@ export const Stats = () => {
             <span>web</span>
           </h4>
           <div className={styles.statGrid}>
-            <span className="chip">HTML</span>
-            <span className="chip">CSS</span>
             <span className="chip">TailwindCSS</span>
             <span className="chip">Bootstrap5</span>
             <span className="chip">JavaScript</span>
