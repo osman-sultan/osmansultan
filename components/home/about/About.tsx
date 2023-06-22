@@ -15,18 +15,18 @@ export const About = () => {
             <p className={`${styles.aboutText} ${styles.highlightFirstLetter}`}>
               hello world✌️, i&apos;m osman. i&apos;m a bit all over the place
               but my goal lies in making interactions between humans and tech as
-              accessible as possible. based in the greater toronto area, i
-              sometimes feel like a sponge🧽, absorbing all that I can from the
-              many remarkable people around me.
+              accessible as possible. based in the greater toronto area,
+              i&apos;m on a constant journey fueled by curiosity, absorbing all
+              that I can from the many remarkable people around me 🚘.
             </p>
           </Reveal>
           <Reveal>
             <p className={styles.aboutText}>
               naturally, as an unfortunate victim of fomo, im a serial hobbie
               hopper. currently, my interests lie in walkable cities (as a
-              mississauga native, you could probably guess why), cars (v8, v10,
-              v12 powered ones), hogwarts legacy, and the thought that messi
-              might play at bmo field.
+              mississauga native, you could probably guess why 🛣️), cars (v8,
+              v10, v12 powered ones), hogwarts legacy, and the thought that
+              messi might play at bmo field ⚽.
             </p>
           </Reveal>
           <Reveal>

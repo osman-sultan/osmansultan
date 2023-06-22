@@ -105,6 +105,50 @@ const projects = [
         <p>
           In this project, inspired by Brazil&apos;s loss in the 2014 World Cup
           due to Neymar&apos;s injury, I used machine learning to predict soccer
+          injuries, an important yet overlooked facet of the beautiful game.
+        </p>
+        <p>
+          After scraping data from Transfermarkt and FBREF, I tackled issues of
+          class imbalance and low-correlation features using techniques like
+          SMOTE oversampling, feature engineering, and feature scaling.
+        </p>
+        <p>
+          I developed several models including logistic regression, random
+          forest, and an ANN. Through extensive hyperparamter tuning through
+          grid search and random search, the logistic regression model with L2
+          loss stood out, demonstrating an impressive ROC AUC of 0.726 and a
+          recall of 0.851.
+        </p>
+        <p>
+          Despite early setbacks with low-correlation features and poor initial
+          model performances, my investigation into soccer injuries made
+          significant strides by successfully identified injury-prone players,
+          like Neymar, and despite its tendency to overlabel healthy players as
+          at-risk, it provided valuable insights, setting a promising foundation
+          for future research into global datasets and additional relevant
+          features.
+        </p>
+        <p style={{ fontStyle: "italic" }}>
+          Motivation for this project is highly inspired by the movie Money Ball
+          and my own love for Football.
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "Metro.ca UI/UX Redesign",
+    imgSrc: "/project-imgs/metro.png",
+    code: "",
+    projectLink:
+      "https://www.figma.com/file/tdwsXc9MEZmhoZh29XSm42/Metro---Function-1?type=design&node-id=0-1&mode=design",
+    tech: ["Figma"],
+    description:
+      "Reimagined the well known grocery stores online marketplace to make home delivery orders as easy as possible.",
+    modalContent: (
+      <>
+        <p>
+          In this project, inspired by Brazil&apos;s loss in the 2014 World Cup
+          due to Neymar&apos;s injury, I used machine learning to predict soccer
           injuries, and important yet overlooked facet of the beautiful game.
         </p>
         <p>
@@ -135,47 +179,4 @@ const projects = [
       </>
     ),
   },
-  // {
-  //   title: "Metro.ca UI/UX Redesign",
-  //   imgSrc: "/project-imgs/soccerinjuries.png",
-  //   code: "",
-  //   projectLink: "",
-  //   tech: ["Figma"],
-  //   description:
-  //     "Dove into soccer injury analytics, using ML tools to predict club success. Fine-tuned multiple models for better predictions. It's Money Ball meets physiotherapy.",
-  //   modalContent: (
-  //     <>
-  //       <p>
-  //         In this project, inspired by Brazil&apos;s loss in the 2014 World Cup
-  //         due to Neymar&apos;s injury, I used machine learning to predict soccer
-  //         injuries, and important yet overlooked facet of the beautiful game.
-  //       </p>
-  //       <p>
-  //         After scraping data from Transfermarkt and FBREF, I tackled issues of
-  //         class imbalance and low-correlation features using techniques like
-  //         SMOTE oversampling, feature engineering, and feature scaling.
-  //       </p>
-  //       <p>
-  //         I developed several models including logistic regression, random
-  //         forest, and an ANN. Through extensive hyperparamter tuning through
-  //         grid search and random search, the logistic regression model with L2
-  //         loss stood out, demonstrating an impressive ROC AUC of 0.726 and a
-  //         recall of 0.851.
-  //       </p>
-  //       <p>
-  //         Despite early setbacks with low-correlation features and poor initial
-  //         model performances, my investigation into soccer injuries made
-  //         significant strides by successfully identified injury-prone players,
-  //         like Neymar, and despite its tendency to overlabel healthy players as
-  //         at-risk, it provided valuable insights, setting a promising foundation
-  //         for future research into global datasets and additional relevant
-  //         features.
-  //       </p>
-  //       <p style={{ fontStyle: "italic" }}>
-  //         Motivation for this project is highly inspired by the movie Money Ball
-  //         and my own love for Football.
-  //       </p>
-  //     </>
-  //   ),
-  // },
 ];
