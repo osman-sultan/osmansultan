@@ -44,11 +44,22 @@ const experience = [
   {
     title: "Self-employed",
     position: "Coding Tutor",
-    time: "2021-2022",
+    time: "2021 - 2022",
     location: "Toronto, ON",
     description: `Applied practical Python, Java, and SQL programming experience to guide 3-10 students weekly, contributing to an average grade increase of 50% in related coursework.\n
     Provided instruction on diverse set of topics including syntax, data types, object-oriented programming, joins, algorithms, big-O notation, and more, contributing to a 30% improvement in test scores on these topics.\n
     Successfully implemented tailored weekly tutorial sessions, fostering a shift in students' perspectives towards programming, with notable growth in both proficiency and passion for the subject.`,
     tech: ["Python", "Java", "SQL"],
+  },
+  {
+    title: "Visions of Science",
+    position: "Senior Club Facilitator",
+    time: "2019 - 2020",
+    location: "Mississauga, ON",
+    description: `Facilitated diverse STEM modules for over 20 local youth aged 6-13, covering topics from model bridge engineering to climate change exploration. This approach led to a 30% improvement in understanding of STEM concepts, as measured through pre and post module assessments.\n
+    Directed a team of 7 facilitators, effectively managing task delegation, resulting in a 20% improvement in overall team productivity and a 100% completion rate of modules.\n
+    Utilized engaging, kid-friendly approaches to present modules and educate on diverse topics, leading to a notable 45% increase in program retention rate, highlighting the successful adaptation of complex concepts for a young audience.\n
+    Provided support to resolve emotional disruptions and conflicts among youth, resulting in a 50% decrease in behavioral incidents and contributing to a more conducive learning environment.`,
+    tech: ["Scratch"],
   },
 ];

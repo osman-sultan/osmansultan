@@ -23,7 +23,7 @@ const projects = [
     code: "https://github.com/osman-sultan/proompter",
     projectLink: "https://projectproompter.vercel.app/",
     tech: ["Next.js 13", "TailwindCSS", "MongoDB", "NextAuth.js"],
-    description: "Open source prompt sharing repository to power your LLM's",
+    description: "Open source prompt sharing repository to power your LLM's.",
     modalContent: (
       <>
         <p>
@@ -42,6 +42,43 @@ const projects = [
           high-quality prompts to optimize these models (garbage in = garbage
           out). Proompter was also an excuse to finally learn Nextjs 13 and its
           new app directory to utilize serverless API endpoints (sayonara MVC).
+        </p>
+      </>
+    ),
+  },
+  {
+    title: "This Website",
+    imgSrc: "/project-imgs/example-project.jpg",
+    code: "https://github.com/osman-sultan/osmansultan",
+    projectLink: "https://www.osmansultan.me",
+    tech: ["Next.js 13", "Sass", "Framer Motion", "Anime.js"],
+    description: "In all its glory.",
+    modalContent: (
+      <>
+        <p>
+          The cool moving dots (click them) on the hero section were made with{" "}
+          <a href="https://animejs.com/" target="_blank">
+            anime.js
+          </a>
+          .
+        </p>
+        <p>
+          The reveal on scroll animations were made with{" "}
+          <a href="https://www.framer.com/motion/" target="_blank">
+            framer motion
+          </a>
+          .
+        </p>
+        <p>The font I used is IBM Plex Mono.</p>
+        <p>
+          Colours: background: rgb(223, 204, 166), bg-opaque: rgba(223, 204, 166
+          0.25), background-light: rgb(207, 171, 98), background-dark: rgb(223,
+          204, 166), text: rgb(0, 0, 0), brand: rgb(0, 92, 0).
+        </p>
+        <p style={{ fontStyle: "italic" }}>
+          Tried going for a forest, earthy vibe with the browns and greens. My
+          friend said the font is cringe cause it screams &quot;i&apos;m a
+          coder&quot; - do you agree?
         </p>
       </>
     ),
