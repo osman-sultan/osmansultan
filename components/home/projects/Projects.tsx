@@ -18,6 +18,44 @@ export const Projects = () => {
 
 const projects = [
   {
+    title: "TerraSculpt",
+    imgSrc: "/project-imgs/terrasculpt.png",
+    code: "https://github.com/osman-sultan/TerraSculpt",
+    projectLink: "",
+    tech: ["Python", "PyTorch", "TorchVision", "Matplotlib", "CUDA"],
+    description:
+      "An ML pipeline for landscape generation and classification. Leveraged unique takes on VAE and EfficientNetV2 models. A prospective journey into land-use planning.",
+    modalContent: (
+      <>
+        <p>
+          I developed a machine learning pipeline using PyTorch to generate and
+          classify artificial landscape images; my first exploration of deep
+          learning
+        </p>
+        <p>
+          The motivation behind this project was to uncover a novel layer in
+          environmental monitoring and land-use planning by combining the power
+          of the EfficientNetV2 architecture for classification and the
+          Variational Autoencoder (VAE) for generation.
+        </p>
+        <p>
+          Although there were challenges, such as the VAE producing blurry
+          images and underperforming compared to the baseline generator, the
+          project represented an insightful initial step towards leveraging
+          computer vision for land monitoring purposes.
+        </p>
+        <p>
+          It was my first attempt at uncovering the potential of combining
+          generative and classification deep learning models within a unified
+          pipeline.
+        </p>
+        <p style={{ fontStyle: "italic" }}>
+          What I really mean is that I should have used a Vision Transfomer.
+        </p>
+      </>
+    ),
+  },
+  {
     title: "Proompter",
     imgSrc: "/project-imgs/proompter.png",
     code: "https://github.com/osman-sultan/proompter",
@@ -47,9 +85,9 @@ const projects = [
     ),
   },
   {
-    title: "CARKart Automotive Marketplace",
-    imgSrc: "/project-imgs/portfolio.png",
-    code: "https://github.com/osman-sultan/osmansultan",
+    title: "CarKART Automotive Marketplace",
+    imgSrc: "/project-imgs/carkart.png",
+    code: "https://github.com/osman-sultan",
     projectLink: "",
     tech: ["Vue.js", "Bootstrap5", "Spring Boot", "SQL"],
     description:
@@ -57,29 +95,29 @@ const projects = [
     modalContent: (
       <>
         <p>
-          The cool moving dots (click them) on the hero section were made with{" "}
-          <a href="https://animejs.com/" target="_blank">
-            anime.js
-          </a>
-          .
+          A straightforward marketplace to buy, sell, trade, and compare used
+          and new automobiles. Lead a team of 7 as the lead software engineer in
+          this project.
         </p>
         <p>
-          The reveal on scroll animations were made with{" "}
-          <a href="https://www.framer.com/motion/" target="_blank">
-            framer motion
+          Vue.js 3 (composition api) + Bootstrap5 for the{" "}
+          <a href="https://github.com/osman-sultan/CarKART-FrontEnd">
+            frontend
           </a>
-          .
+          .Prototyped it in Figma.
         </p>
-        <p>The font I used is IBM Plex Mono.</p>
         <p>
-          Colours: background: rgb(223, 204, 166), bg-opaque: rgba(223, 204, 166
-          0.25), background-light: rgb(207, 171, 98), background-dark: rgb(223,
-          204, 166), text: rgb(0, 0, 0), brand: rgb(0, 92, 0).
+          Spring Boot + H2 SQL for{" "}
+          <a href="https://github.com/osman-sultan/CarKART-BackEnd">backend</a>.
+        </p>
+        <p>
+          Implemented unit testing and testing suites to validate functionality
+          and maintain code quality.
         </p>
         <p style={{ fontStyle: "italic" }}>
-          Tried going for a forest, earthy vibe with the browns and greens. My
-          friend said the font is cringe cause it screams &quot;i&apos;m a
-          coder&quot; - do you agree?
+          This project served as a fun way learn backend fundementals (MVC,
+          CRUD, and custom API endpoints) in a practical manor by combing it
+          with something I love🚗.
         </p>
       </>
     ),
@@ -121,44 +159,7 @@ const projects = [
       </>
     ),
   },
-  {
-    title: "TerraSculpt",
-    imgSrc: "/project-imgs/terrasculpt.png",
-    code: "https://github.com/osman-sultan/TerraSculpt",
-    projectLink: "",
-    tech: ["Python", "PyTorch", "TorchVision", "Matplotlib", "CUDA"],
-    description:
-      "An ML pipeline for landscape generation and classification. Leveraged unique takes on VAE and EfficientNetV2 models. A prospective journey into land-use planning.",
-    modalContent: (
-      <>
-        <p>
-          I developed a machine learning pipeline using PyTorch to generate and
-          classify artificial landscape images; my first exploration of deep
-          learning
-        </p>
-        <p>
-          The motivation behind this project was to uncover a novel layer in
-          environmental monitoring and land-use planning by combining the power
-          of the EfficientNetV2 architecture for classification and the
-          Variational Autoencoder (VAE) for generation.
-        </p>
-        <p>
-          Although there were challenges, such as the VAE producing blurry
-          images and underperforming compared to the baseline generator, the
-          project represented an insightful initial step towards leveraging
-          computer vision for land monitoring purposes.
-        </p>
-        <p>
-          It was my first attempt at uncovering the potential of combining
-          generative and classification deep learning models within a unified
-          pipeline.
-        </p>
-        <p style={{ fontStyle: "italic" }}>
-          What I really mean is that I should have used a Vision Transfomer.
-        </p>
-      </>
-    ),
-  },
+
   {
     title: "Underlying Factors in Soccer Injuries",
     imgSrc: "/project-imgs/soccerinjuries.png",
