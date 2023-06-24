@@ -257,4 +257,38 @@ const projects = [
       </>
     ),
   },
+  {
+    title: "Stable Marriage Problem Solver",
+    imgSrc: "/project-imgs/smp.png",
+    code: "",
+    projectLink:
+      "https://www.figma.com/file/tdwsXc9MEZmhoZh29XSm42/Metro---Function-1?type=design&node-id=0-1&mode=design",
+    tech: ["Java"],
+    description: "Fun and relatable application of the Gale-Shapely Algorithm",
+    modalContent: (
+      <>
+        <p>
+          A fun implementation of the Gale-Shapley algorithm to solve the famous
+          Stable Marriage Problem (SMP) using vanilla Java and OOP fundementals.
+        </p>
+        <p>
+          This approach imagines SMP in a relatable context where students and
+          schools represent the suitors and receivers (or vice versa).
+        </p>
+        <p>
+          This program includes an indepth user-friendly CLI to provide the user
+          with statistics and easy manipulation of the data.
+        </p>
+        <p>
+          Provided in this repository are sample datasets of upto 2000
+          participants, formatted in a specific manor, with sample test cases to
+          support the robust nature of the scripts. However, feel free to
+          develop your own datasets and inputs when running the program!
+        </p>
+        <p style={{ fontStyle: "italic" }}>
+          On the off chance you find a bug, let me know :)
+        </p>
+      </>
+    ),
+  },
 ];
