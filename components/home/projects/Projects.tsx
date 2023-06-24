@@ -56,6 +56,44 @@ const projects = [
     ),
   },
   {
+    title: "CarKART Automotive Marketplace",
+    imgSrc: "/project-imgs/carkart.png",
+    code: "https://github.com/osman-sultan",
+    projectLink: "",
+    tech: ["Vue.js", "Vite", "Bootstrap5", "Spring Boot", "SQL"],
+    description:
+      "A fullstack e-commerce platform to compare, buy, sell, and trade cars.",
+    modalContent: (
+      <>
+        <p>
+          A straightforward marketplace to buy, sell, trade, and compare used
+          and new automobiles. Lead a team of 7 as the lead software engineer in
+          this project.
+        </p>
+        <p>
+          Vue.js 3 (composition api) + Bootstrap5 configured with Vite for the{" "}
+          <a href="https://github.com/osman-sultan/CarKART-FrontEnd">
+            frontend
+          </a>
+          .Prototyped it in Figma.
+        </p>
+        <p>
+          Spring Boot + H2 SQL for{" "}
+          <a href="https://github.com/osman-sultan/CarKART-BackEnd">backend</a>.
+        </p>
+        <p>
+          Implemented unit testing and testing suites to validate functionality
+          and maintain code quality.
+        </p>
+        <p style={{ fontStyle: "italic" }}>
+          This project served as a fun way learn backend fundementals (MVC,
+          CRUD, and custom API endpoints) in a practical manor by combing it
+          with something I love🚗.
+        </p>
+      </>
+    ),
+  },
+  {
     title: "Proompter",
     imgSrc: "/project-imgs/proompter.png",
     code: "https://github.com/osman-sultan/proompter",
@@ -84,44 +122,7 @@ const projects = [
       </>
     ),
   },
-  {
-    title: "CarKART Automotive Marketplace",
-    imgSrc: "/project-imgs/carkart.png",
-    code: "https://github.com/osman-sultan",
-    projectLink: "",
-    tech: ["Vue.js", "Bootstrap5", "Spring Boot", "SQL"],
-    description:
-      "A fullstack e-commerce platform to compare, buy, sell, and trade cars.",
-    modalContent: (
-      <>
-        <p>
-          A straightforward marketplace to buy, sell, trade, and compare used
-          and new automobiles. Lead a team of 7 as the lead software engineer in
-          this project.
-        </p>
-        <p>
-          Vue.js 3 (composition api) + Bootstrap5 for the{" "}
-          <a href="https://github.com/osman-sultan/CarKART-FrontEnd">
-            frontend
-          </a>
-          .Prototyped it in Figma.
-        </p>
-        <p>
-          Spring Boot + H2 SQL for{" "}
-          <a href="https://github.com/osman-sultan/CarKART-BackEnd">backend</a>.
-        </p>
-        <p>
-          Implemented unit testing and testing suites to validate functionality
-          and maintain code quality.
-        </p>
-        <p style={{ fontStyle: "italic" }}>
-          This project served as a fun way learn backend fundementals (MVC,
-          CRUD, and custom API endpoints) in a practical manor by combing it
-          with something I love🚗.
-        </p>
-      </>
-    ),
-  },
+
   {
     title: "This Website",
     imgSrc: "/project-imgs/portfolio.png",
