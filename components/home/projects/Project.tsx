@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Reveal } from "@/components/utils/Reveal";
 import { motion, useAnimation, useInView } from "framer-motion";
 import Image from "next/image";
