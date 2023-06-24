@@ -260,9 +260,8 @@ const projects = [
   {
     title: "Stable Marriage Problem Solver",
     imgSrc: "/project-imgs/smp.png",
-    code: "",
-    projectLink:
-      "https://www.figma.com/file/tdwsXc9MEZmhoZh29XSm42/Metro---Function-1?type=design&node-id=0-1&mode=design",
+    code: "https://www.figma.com/file/tdwsXc9MEZmhoZh29XSm42/Metro---Function-1?type=design&node-id=0-1&mode=design",
+    projectLink: "",
     tech: ["Java"],
     description: "Fun and relatable application of the Gale-Shapely Algorithm",
     modalContent: (
