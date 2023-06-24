@@ -128,7 +128,7 @@ const projects = [
     imgSrc: "/project-imgs/portfolio.png",
     code: "https://github.com/osman-sultan/osmansultan",
     projectLink: "https://www.osmansultan.me",
-    tech: ["Next.js 13", "Sass", "Framer Motion", "Anime.js"],
+    tech: ["Next.js 13", "TypeScript", "Sass", "Framer Motion", "Anime.js"],
     description: "In all its glory.",
     modalContent: (
       <>
