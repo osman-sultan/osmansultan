@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,9 +51,7 @@ export const ProjectModal = ({
         onClick={(e) => e.stopPropagation()}
         className={styles.modalCard}
       >
-        <Image
-          width={650}
-          height={500}
+        <img
           className={styles.modalImage}
           src={imgSrc}
           alt={`An image of the ${title} project.`}

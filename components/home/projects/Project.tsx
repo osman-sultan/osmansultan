@@ -2,6 +2,7 @@ import { Reveal } from "@/components/utils/Reveal";
 import { motion, useAnimation, useInView } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { Container } from "postcss";
 import { useEffect, useRef, useState } from "react";
 import { AiFillGithub, AiOutlineExport } from "react-icons/ai";
 import { ProjectModal } from "./ProjectModal";
@@ -61,15 +62,14 @@ export const Project = ({
           onClick={() => setIsOpen(true)}
           className={styles.projectImage}
         >
-          <Image
-            width={600}
-            height={275}
+          <img
             src={imgSrc}
             alt={`An image of the ${title} project.`}
             style={{
               width: hovered ? "90%" : "85%",
               rotate: hovered ? "2deg" : "0deg",
             }}
+            // sizes={`${hovered ? "90vw" : "85vw"}`}
           />
         </div>
         <div className={styles.projectCopy}>
