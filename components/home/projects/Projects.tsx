@@ -49,14 +49,14 @@ const projects = [
         </p>
         <p>
           The motivation behind this project was to explore MLOps/LLMOps,
-          particularly infrastructure and how to make interaction with LLM api's
-          i.e. Replicate and OpenAI production ready and effective. This lead me
-          to explore vector databases, and how LLM chat history/memory can
-          effectively be managed. It also led me to explore edge computing and
-          the concept of streaming, and why its a superior approach then the
-          traditional serverless functions. Also, got to implement my learnings
-          from Andrew Ng's short courses on Langchain which made the prompt
-          engineering part seamless.
+          particularly infrastructure and how to make interaction with LLM
+          API&apos;s i.e. Replicate and OpenAI production ready and effective.
+          This lead me to explore vector databases, and how LLM chat
+          history/memory can effectively be managed. It also led me to explore
+          edge computing and the concept of streaming, and why its a superior
+          approach then the traditional serverless functions. Also, got to
+          implement my learnings from Andrew Ng&apos;s short courses on
+          Langchain which made the prompt engineering part seamless.
         </p>
         <p>
           Additionally, this is my first ever attempt at building out a SaaS, so
@@ -65,15 +65,15 @@ const projects = [
           protected routes.
         </p>
         <p>
-          I must say ShadCN's UI components are amazing and make the front end
-          development experience (something I notoriously find tedious and
+          I must say ShadCN&apos;s UI components are amazing and make the front
+          end development experience (something I notoriously find tedious and
           unejoyable) super satisfying, not to mention the UI actually looks
           good, is accessible, and mobile friendly!!
         </p>
         <p style={{ fontStyle: "italic" }}>
-          BTW the Stripe integration is in test mode, so its not a "real" SaaS
-          product; feel free to use the numerous test cards provided in the
-          Stripe docs to get past the paywall.
+          BTW the Stripe integration is in test mode, so it&apos;s not a
+          &quot;real&quot; SaaS product; feel free to use the numerous test
+          cards provided in the Stripe docs to get past the paywall.
         </p>
       </>
     ),
