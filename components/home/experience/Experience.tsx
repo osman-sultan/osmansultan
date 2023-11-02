@@ -35,6 +35,8 @@ const experience = [
       "Auth0",
       "AWS S3",
       "Storybook",
+      "Ngrok",
+      "Postman",
     ],
   },
   {

@@ -81,6 +81,7 @@ export const Stats = () => {
             <span className="chip">Zod</span>
             <span className="chip">Tanstack Query</span>
             <span className="chip">Storybook</span>
+            <span className="chip">Postman</span>
           </div>
         </div>
       </Reveal>
@@ -121,6 +122,7 @@ export const Stats = () => {
             <span className="chip">Ubuntu</span>
             <span className="chip">Docker</span>
             <span className="chip">WSL</span>
+            <span className="chip">Ngrok</span>
           </div>
         </div>
       </Reveal>
