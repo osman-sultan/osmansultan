@@ -14,6 +14,30 @@ export const Experience = () => {
 
 const experience = [
   {
+    title: "Doctalk Inc.",
+    position: "Full Stack Engineering Intern",
+    time: "Sept. 2023 - Present",
+    location: "Toronto, ON",
+    description: `Deployed and served secure type-safe API endpoints for registration, alerts/notifications, and message threads utilizing a clean service-based architecture with zod for robust validation, resulting in a 40% increase in infrastructure efficiency and enhanced scalability.\n
+    Translated intricate Figma designs into custom Storybook + TailwindCSS UI components, managing server state with React Query, fostering a seamless user experience and contributing to a 35% uplift in user engagement.\n
+    Migrated from the deprecated Redis graph to a Next.js and Supabase PostgreSQL stack, enabling faster proof-of-concept developments and optimizing CI/CD processes to achieve 5x faster feature shipments with Vercel, without compromising high-speed data flow and system scalability.\n
+    Implemented a Dockerized Express.js server with JWT authorization for large file uploads, integrated AWS S3 for storage, and used Next.js as an API gateway/proxy, ensuring optimized and secure data flow between client and server.`,
+    tech: [
+      "Next.js",
+      "TypeScript",
+      "React Query",
+      "TailwindCSS",
+      "Express.js",
+      "Docker",
+      "Supabase",
+      "PostgreSQL",
+      "Redis",
+      "Auth0",
+      "AWS S3",
+      "Storybook",
+    ],
+  },
+  {
     title: "UofT Freelancer's Organization",
     position: "Founding Member & Lead",
     time: "2021 - Present",

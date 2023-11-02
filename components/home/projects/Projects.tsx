@@ -18,6 +18,67 @@ export const Projects = () => {
 
 const projects = [
   {
+    title: "persona.ai",
+    imgSrc: "/project-imgs/persona-home.png",
+    code: "https://github.com/osman-sultan/persona-ai",
+    projectLink: "https://persona-ai-two.vercel.app/",
+    tech: [
+      "Next.js",
+      "TypeScript",
+      "TailwindCSS",
+      "ShadCN UI",
+      "Zustand",
+      "Zod",
+      "Prisma",
+      "MySQL",
+      "Redis",
+      "Pinecone",
+      "Langchain",
+      "Llama-2-70b-chat",
+      "stripe",
+      "Clerk",
+      "Dark Mode",
+    ],
+    description:
+      "A SaaS platform to create and chat with customized LLM-powered Persona's.",
+    modalContent: (
+      <>
+        <p>
+          Developed a software-as-a-service (SaaS) platform that allows users to
+          create and share personalized ai persona&apos;s to chat with.
+        </p>
+        <p>
+          The motivation behind this project was to explore MLOps/LLMOps,
+          particularly infrastructure and how to make interaction with LLM api's
+          i.e. Replicate and OpenAI production ready and effective. This lead me
+          to explore vector databases, and how LLM chat history/memory can
+          effectively be managed. It also led me to explore edge computing and
+          the concept of streaming, and why its a superior approach then the
+          traditional serverless functions. Also, got to implement my learnings
+          from Andrew Ng's short courses on Langchain which made the prompt
+          engineering part seamless.
+        </p>
+        <p>
+          Additionally, this is my first ever attempt at building out a SaaS, so
+          I learned cool tech like Stripe and how role-based
+          authentication/authorization works via Clerk, helping me set up
+          protected routes.
+        </p>
+        <p>
+          I must say ShadCN's UI components are amazing and make the front end
+          development experience (something I notoriously find tedious and
+          unejoyable) super satisfying, not to mention the UI actually looks
+          good, is accessible, and mobile friendly!!
+        </p>
+        <p style={{ fontStyle: "italic" }}>
+          BTW the Stripe integration is in test mode, so its not a "real" SaaS
+          product; feel free to use the numerous test cards provided in the
+          Stripe docs to get past the paywall.
+        </p>
+      </>
+    ),
+  },
+  {
     title: "TerraSculpt",
     imgSrc: "/project-imgs/terrasculpt.png",
     code: "https://github.com/osman-sultan/TerraSculpt",

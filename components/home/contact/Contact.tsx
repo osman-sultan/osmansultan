@@ -14,13 +14,13 @@ export const Contact = () => {
         </Reveal>
         <Reveal width="100%">
           <p className={styles.contactCopy}>
-            shoot me an email if you want to connect! you can also find me on{" "}
+            Shoot me an email if you want to connect! You can also find me on{" "}
             <Link
               href="https://www.linkedin.com/in/osmansultan-/"
               target="_blank"
               rel="nofollow"
             >
-              linkedin
+              LinkedIn
             </Link>{" "}
             if that&apos;s more your speed.
           </p>

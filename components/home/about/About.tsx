@@ -13,67 +13,78 @@ export const About = () => {
         <div>
           <Reveal>
             <p className={`${styles.aboutText} ${styles.highlightFirstLetter}`}>
-              hello world✌️, i&apos;m osman. i&apos;m a bit all over the place
+              Hello world✌️, I&apos;m Osman. I&apos;m a bit all over the place
               but my goal lies in making interactions between humans and tech as
-              accessible as possible. based in the greater toronto area,
-              i&apos;m on a constant journey fueled by curiosity, absorbing all
+              accessible as possible. Based in the Greater Toronto Area,
+              I&apos;m on a constant journey fueled by curiosity, absorbing all
               that I can from the many remarkable people around me🚘.
             </p>
           </Reveal>
           <Reveal>
             <p className={styles.aboutText}>
-              naturally, as an unfortunate victim of fomo, im a serial hobbie
-              hopper. currently, my interests lie in walkable cities (as a
-              mississauga native, you could probably guess why🛣️), cars (v8,
-              v10, v12 powered ones), hogwarts legacy, and the thought that
-              messi might play at bmo field⚽.
+              As an unfortunate victim of FOMO, I&apos;m a serial hobby hopper.
+              Currently, my interests lie in walkable cities (I&apos;m a
+              Mississauga native🛣️ lol), cars (preferably with 8+ cylinders or a
+              rotary), The Crew Motofest, and the thought that Messi might play
+              at BMO field⚽.
             </p>
           </Reveal>
           <Reveal>
             <div>
               <p className={styles.aboutText} style={{ fontWeight: "bold" }}>
-                now:
+                Now:
               </p>
               <p className={styles.aboutText}>
-                i&apos;m a 3rd year industrial engineering major/ai minor at the
-                university of toronto.
+                I&apos;m a 4th year Industrial & Systems Engineering major with
+                a double minor in AI + Business at the University of Toronto.
               </p>
               <p className={styles.aboutText}>
-                leading a team of 4 in building websites for uoft-affiliated
+                On a gap-year to pursue internships and personal projects.
+              </p>
+              <p className={styles.aboutText}>
+                Building out the web platform at {""}
+                <a href="https://doctalk.com" target="_blank">
+                  Doctalk Inc.
+                </a>
+                {""} as a full stack engineering intern.
+              </p>
+              <p className={styles.aboutText}>
+                People don&apos;t lie when they say you wear multiple hats at a
+                start up. What was initially a web dev role quickly turned into
+                a infrastructure, devops, and backend architect role, and I love
+                it. My manager put full faith that us interns can take on a
+                whole database migration - and we did :).
+              </p>
+
+              <p className={styles.aboutText} style={{ fontWeight: "bold" }}>
+                Previously:
+              </p>
+              <p className={styles.aboutText}>
+                Wrote some Python backend code as a SWE intern at{" "}
+                <a href="https://www.molex.com/en-us/home" target="_blank">
+                  Molex
+                </a>
+                .
+              </p>
+              <p className={styles.aboutText}>
+                Lead a team of 4 in building websites for uoft-affiliated
                 clubs/students at{" "}
                 <a href="https://utfo.ca" target="_blank">
-                  utfo
+                  UTFO
                 </a>
                 .
               </p>
               <p className={styles.aboutText}>
-                focusing summer on learning new tech like nextjs and langchain
-                by expanding my portfolio with cool projects, including this
-                very website! curious about socially impactful ai for humans,
-                many of my projects will revolve around the now dominant llm
-                field.
-              </p>
-              <p className={styles.aboutText} style={{ fontWeight: "bold" }}>
-                previously:
-              </p>
-              <p className={styles.aboutText}>
-                wrote some python backend code as a swe intern at{" "}
-                <a href="https://www.molex.com/en-us/home" target="_blank">
-                  molex
-                </a>
-                .
-              </p>
-              <p className={styles.aboutText}>
-                taught some python, java, and sql i learned in highschool to
+                Taught some Python, Java, and SQL I learned in highschool to
                 novice 2nd year engineering students.
               </p>
               <p className={styles.aboutText}>
-                lead f!rosh week twice (and hopefully a third time this
+                Lead f!rosh week thrice (and hopefully a fourth time next
                 september), welcoming incoming 1st years in the awesomest way
                 possible.
               </p>
               <p className={styles.aboutText}>
-                made STEM accesible to youth in low-income communities with{" "}
+                Made STEM accesible to youth in low-income communities with{" "}
                 <a href="https://www.vosnl.org/" target="_blank">
                   visions of science
                 </a>

@@ -1,4 +1,5 @@
 import "@styles/globals.css";
+import { GeistMono, GeistSans } from "geist/font";
 import { IBM_Plex_Mono, Poppins } from "next/font/google";
 
 const ibm_plex_mono = IBM_Plex_Mono({
@@ -23,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={ibm_plex_mono.className}>
+      <body className={GeistSans.className}>
         <div id="root">{children}</div>
       </body>
     </html>
