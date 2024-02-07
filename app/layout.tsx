@@ -1,4 +1,5 @@
 import "@styles/globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import { GeistMono, GeistSans } from "geist/font";
 import { IBM_Plex_Mono, Poppins } from "next/font/google";
 
@@ -25,7 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={GeistSans.className}>
-        <div id="root">{children}</div>
+        <div id="root">
+          {children}
+          <Analytics />
+        </div>
       </body>
     </html>
   );
