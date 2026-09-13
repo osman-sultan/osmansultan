@@ -52,8 +52,13 @@ import daggerMeta from "@/assets/game/dagger.json"
 // Logical size. The canvas element scales this to its width, so a
 // smaller logical width means everything draws bigger on screen.
 const W = 400
-const H = 250
-const GROUND = H - 40 // y of the base rooftop level (screen px, y down)
+// The world is authored at 400 x 250 (8:5, the window frame's opening). On
+// phones the canvas is a taller 4:5, so H follows the rendered aspect ratio
+// (see resize()) and everything anchored to the ground moves down with it;
+// the extra room is sky.
+const BASE_H = 250
+let H = BASE_H
+let GROUND = H - 40 // y of the base rooftop level (screen px, y down)
 const LEVEL_H = 26 // height difference between rooftop levels
 const PLAYER_X = 80
 const PLAYER_W = 12
@@ -84,7 +89,7 @@ const TARGET_FPS = 60
 const IDLE_MS = 50
 // How far the window frame's top bar reaches into the canvas (see
 // sands-runner.astro): the HUD starts below it.
-const HUD_TOP = 36
+const HUD_TOP = 36 // under the window frame's top bar
 
 type Part = { idx: number; x: number; w: number } // one building in a platform
 type Clutter = { idx: number; x: number } // a prop on a roof, x from its start
@@ -336,6 +341,20 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     const key = palette === PALETTES.dark ? "night" : "day"
     if (tiles[key].scale !== devScale) tiles[key] = emptyTiles(devScale)
     return tiles[key]
+  }
+  // Colour of a tile's top edge (its middle pixel), cached per tile: used to
+  // continue the sky above the painting on tall canvases.
+  const topColors = new WeakMap<HTMLCanvasElement, string>()
+  function topColorOf(tile: HTMLCanvasElement) {
+    let col = topColors.get(tile)
+    if (!col) {
+      const d = tile
+        .getContext("2d")!
+        .getImageData(tile.width >> 1, 0, 1, 1).data
+      col = `rgb(${d[0]}, ${d[1]}, ${d[2]})`
+      topColors.set(tile, col)
+    }
+    return col
   }
   function tileOf(
     slot: (HTMLCanvasElement | null)[],
@@ -859,8 +878,15 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     // Sky backdrop: a painted image cut to the canvas shape (sun or moon
     // and stars included); a plain gradient stands in until it has loaded.
     const skyTile = tileOf(set.sky, 0, imageOf(night ? skyNight : skyDay), W)
-    if (skyTile) c.drawImage(skyTile, 0, 0, W, H)
-    else {
+    if (skyTile) {
+      const th = skyTile.height / devScale
+      if (th < H) {
+        // Taller canvas than the painting: extend its top colour upward.
+        c.fillStyle = topColorOf(skyTile)
+        c.fillRect(0, 0, W, H - th + 1)
+      }
+      c.drawImage(skyTile, 0, H - th, W, th)
+    } else {
       let sky = skyGradients.get(pal)
       if (!sky) {
         sky = c.createLinearGradient(0, 0, 0, GROUND)
@@ -880,7 +906,8 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
         imageOf(night ? l.night : l.day),
         l.width
       )
-      if (tile) drawTiled(c, tile, l.width, l.bottom, l.parallax, 1)
+      if (tile)
+        drawTiled(c, tile, l.width, l.bottom + (H - BASE_H), l.parallax, 1)
     })
 
     // Rooftops.
@@ -994,7 +1021,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     // current level, so the sand recedes toward the hilt as it is spent.
     const dx = 8
     const dy = HUD_TOP + 14
-    const dh = Math.round((DAGGER.h / DAGGER.w) * DAGGER_W)
+    const dh = daggerH
     const k = DAGGER_W / DAGGER.w
     const fx0 = dx + DAGGER.fill[0]! * k
     const fx1 = dx + DAGGER.fill[1]! * k
@@ -1015,6 +1042,13 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
       c.fillRect(fx0, dy + dh / 2 - 2, level - fx0, 4)
     }
     text("sands of time", dx + 4, dy + dh + 2, "left", FONT_SMALL, pal.muted)
+    // Time frozen: show that the dagger is the thing to hold.
+    if (state === "dead" && Math.floor(blink * 2) % 2 === 0) {
+      const hb = daggerHitBox()
+      c.strokeStyle = REWIND_SAND
+      c.lineWidth = 1
+      c.strokeRect(hb.x + 0.5, hb.y + 0.5, hb.w - 1, hb.h - 1)
+    }
 
     // Prompts.
     const prompt = (str: string, y: number, fill = pal.text) =>
@@ -1024,7 +1058,9 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     } else if (state === "dead") {
       if (Math.floor(blink * 2) % 2 === 0) {
         prompt(
-          hoverCapable ? "hold R to rewind time" : "hold to rewind time",
+          hoverCapable
+            ? "hold R or the dagger to rewind time"
+            : "hold the dagger to rewind time",
           H / 2 - 30
         )
       }
@@ -1153,28 +1189,43 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
       rewindSpent = false
     }
   }
-  // Touch: a tap jumps; a hold rewinds. Mid-run the hold starts as a jump,
-  // which the rewind then undoes along with everything else.
-  let holdTimer = 0
+  // Pointer: a tap anywhere jumps, and holding it keeps the jump high, the
+  // same as holding space. Rewinding is a hold on the HUD dagger, so a long
+  // jump can never turn into a rewind by accident. (It used to: a press
+  // held past 250 ms rewound, which is exactly how you hold for a long jump.)
+  const daggerH = Math.round((DAGGER.h / DAGGER.w) * DAGGER_W)
+  function daggerHitBox() {
+    // The dagger art plus a thumb-sized margin; logical px.
+    return { x: 0, y: HUD_TOP, w: 8 + DAGGER_W + 20, h: 14 + daggerH + 22 }
+  }
+  function toLogical(e: PointerEvent) {
+    const rect = canvas.getBoundingClientRect()
+    const k = W / rect.width
+    return { x: (e.clientX - rect.left) * k, y: (e.clientY - rect.top) * k }
+  }
+  let rewindPointer = -1
   function onPointerDown(e: PointerEvent) {
     e.preventDefault()
     canvas.setPointerCapture(e.pointerId)
-    if (state === "dead" || state === "rewinding") rewindHeld = true
-    else {
+    const p = toLogical(e)
+    const hb = daggerHitBox()
+    const onDagger =
+      p.x >= hb.x && p.x <= hb.x + hb.w && p.y >= hb.y && p.y <= hb.y + hb.h
+    if (onDagger && state !== "idle" && state !== "over") {
+      rewindPointer = e.pointerId
+      rewindHeld = true
+    } else if (state !== "dead" && state !== "rewinding") {
       jumpPress()
-      clearTimeout(holdTimer)
-      holdTimer = window.setTimeout(() => {
-        rewindHeld = true
-        wake()
-      }, 250)
     }
     wake()
   }
-  function onPointerUp() {
-    clearTimeout(holdTimer)
+  function onPointerUp(e: PointerEvent) {
     jumpHeld = false
-    rewindHeld = false
-    rewindSpent = false
+    if (e.pointerId === rewindPointer || rewindPointer === -1) {
+      rewindPointer = -1
+      rewindHeld = false
+      rewindSpent = false
+    }
   }
 
   window.addEventListener("keydown", onKeyDown)
@@ -1208,9 +1259,25 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     canvas.dataset.runnerSand = sand.toFixed(2)
   }
 
+  // Change the world's height (CSS decides it via the canvas aspect ratio).
+  // Anything recorded in screen y moves with the ground so a rotation
+  // mid-run does not leave the prince, or his rewind history, floating.
+  function setWorldHeight(h: number) {
+    if (h === H) return
+    const dy = h - 40 - GROUND
+    H = h
+    GROUND = h - 40
+    y += dy
+    for (const f of history) f.y += dy
+    for (const g of ghosts) g.y += dy
+    skyGradients.clear()
+    vignette = null
+  }
   function resize() {
     const rect = canvas.getBoundingClientRect()
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    if (rect.width > 0 && rect.height > 0)
+      setWorldHeight(Math.round((rect.height / rect.width) * W))
     canvas.width = Math.round(rect.width * dpr)
     canvas.height = Math.round(((rect.width * H) / W) * dpr)
     devScale = canvas.width / W
@@ -1319,7 +1386,6 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   return function dispose() {
     stop()
     clearTimeout(prefetch)
-    clearTimeout(holdTimer)
     visibility.disconnect()
     sizeObserver.disconnect()
     themeObserver.disconnect()

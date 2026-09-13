@@ -12,59 +12,84 @@
  * opening's height match the canvas's 8:5 shape. The percentages below are
  * all of the figure's width.
  */
-import { Image } from "astro:assets"
+import { getImage } from "astro:assets"
 import frameLight from "@/assets/game/frame-light.webp"
 import frameDark from "@/assets/game/frame-dark.webp"
+import framePortraitLight from "@/assets/game/frame-portrait-light.webp"
+import framePortraitDark from "@/assets/game/frame-portrait-dark.webp"
 
+// Two cuts of the same frame art: the landscape original (991 x 610, opening
+// 8:5) from the `sm` breakpoint up, and a portrait build of it (991 x 1110,
+// the pillars extended by scripts/make-portrait-frame.mjs) on phones, where the canvas is a thumb-friendly 776:985. The top
+// and bottom bars are identical in both, so the padding and margins that
+// place the canvas in the opening are the same percentages of the width.
 const frameClass =
-  "pointer-events-none absolute inset-x-0 top-0 aspect-[991/610] w-full select-none"
-// The figure spans the main column: full width on phones, at most the
-// column's ~34rem beside the nav rail. Astro generates these widths so
+  "pointer-events-none absolute inset-x-0 top-0 aspect-[991/1110] w-full select-none sm:aspect-[991/610]"
+// The figure spans the main column: the full viewport on phones, at most
+// the column's ~34rem beside the nav rail. Astro generates these widths so
 // phones are not sent the 991 px original.
 const frameWidths = [420, 640, 991]
-const frameSizes = "(min-width: 768px) 34rem, calc(100vw - 3rem)"
+const frameSizes = "(min-width: 768px) 34rem, (min-width: 640px) calc(100vw - 3rem), 100vw"
+const cut = (src: ImageMetadata) =>
+  getImage({ src, widths: frameWidths, format: "webp" })
+const frames = {
+  light: { landscape: await cut(frameLight), portrait: await cut(framePortraitLight) },
+  dark: { landscape: await cut(frameDark), portrait: await cut(framePortraitDark) },
+}
 ---
 
-<figure class="flex flex-col gap-2 font-mono" data-sands-runner>
+<!-- On phones the figure bleeds to the viewport edges and the canvas is a
+     tall 776:985 inside the portrait frame; from `sm` up it is 8:5 inside
+     the landscape one. The game reads its logical height from the rendered
+     aspect ratio. -->
+<figure class="-mx-6 flex flex-col gap-2 font-mono sm:mx-0" data-sands-runner>
   <div class="relative pt-[4.28%] pb-[8.38%]">
     <canvas
-      class="ml-[10.7%] block w-[78.3%] touch-none bg-card/30 select-none"
+      class="ml-[10.7%] block aspect-[776/985] w-[78.3%] touch-none bg-card/30 select-none sm:aspect-[8/5]"
       width="400"
-      height="250"
+      height="500"
       tabindex="0"
       role="img"
-      aria-label="Sands of Time runner mini-game. Press space to jump over rooftop gaps and clutter; hold R to rewind time, even mid-run."
+      aria-label="Sands of Time runner mini-game. Press space or tap to jump over rooftop gaps and clutter; hold R or hold the dagger to rewind time, even mid-run."
       data-runner-canvas></canvas>
-    <!-- The light frame is the home page's largest paint, so it loads eagerly
-         at high priority. The dark one is display:none under the light
-         theme; lazy loading keeps the browser from fetching it there, while
-         in dark mode it sits in the viewport and loads right after layout. -->
-    <Image
-      src={frameLight}
-      widths={frameWidths}
-      sizes={frameSizes}
-      alt=""
-      aria-hidden="true"
-      loading="eager"
-      fetchpriority="high"
-      class={`${frameClass} dark:hidden`}
-    />
-    <Image
-      src={frameDark}
-      widths={frameWidths}
-      sizes={frameSizes}
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      class={`${frameClass} hidden dark:block`}
-    />
+    <!-- <picture> picks the cut for the viewport, so only one is fetched.
+         The light one is the home page's largest paint and loads eagerly at
+         high priority. The dark one is display:none under the light theme;
+         lazy loading keeps the browser from fetching it there, while in dark
+         mode it sits in the viewport and loads right after layout. -->
+    {
+      (["light", "dark"] as const).map((theme) => (
+        <picture class={theme === "light" ? "contents dark:hidden" : "hidden dark:contents"}>
+          <source
+            media="(min-width: 640px)"
+            srcset={frames[theme].landscape.srcSet.attribute}
+            sizes={frameSizes}
+            width={frames[theme].landscape.attributes.width}
+            height={frames[theme].landscape.attributes.height}
+          />
+          <img
+            src={frames[theme].portrait.src}
+            srcset={frames[theme].portrait.srcSet.attribute}
+            sizes={frameSizes}
+            width={frames[theme].portrait.attributes.width}
+            height={frames[theme].portrait.attributes.height}
+            alt=""
+            aria-hidden="true"
+            loading={theme === "light" ? "eager" : "lazy"}
+            fetchpriority={theme === "light" ? "high" : "auto"}
+            decoding="async"
+            class={frameClass}
+          />
+        </picture>
+      ))
+    }
   </div>
-  <figcaption class="text-xs text-muted-foreground">
+  <figcaption class="px-6 text-xs text-muted-foreground sm:px-0">
     <span class="hidden sm:inline">
       space to jump. hold r to rewind time. the dagger runs dry.
     </span>
     <span class="sm:hidden">
-      tap to jump. hold to rewind time. the dagger runs dry.
+      tap to jump. hold the dagger to rewind time. it runs dry.
     </span>
   </figcaption>
 </figure>
