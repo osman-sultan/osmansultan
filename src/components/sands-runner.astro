@@ -95,8 +95,9 @@ const frames = {
 </figure>
 
 <script>
-  import { initSandsRunner } from "@/lib/runner"
-
+  // The game module (src/lib/runner.ts and its art metadata) is imported on
+  // demand inside boot(), so pages that never scroll to the canvas do not
+  // download or evaluate it.
   // Boots on every page load under the ClientRouter and tears down before
   // the page is swapped away (the canvas is not persisted).
   // Booting loads the sprite atlas and builds the level, which is a chunk
@@ -121,8 +122,11 @@ const frames = {
     )
     if (!canvas) return
     const boot = () => {
-      pending = idle(() => {
+      pending = idle(async () => {
         pending = null
+        const { initSandsRunner } = await import("@/lib/runner")
+        // The page may have been swapped away while the module loaded.
+        if (!canvas.isConnected) return
         dispose = initSandsRunner(canvas)
       })
     }

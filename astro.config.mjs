@@ -30,7 +30,8 @@ export default defineConfig({
           {
             weight: 400,
             style: "normal",
-            src: ["./src/assets/fonts/princeofpersia.ttf"],
+            // WOFF2 build of the TTF kept alongside it (fonttools); about half the bytes.
+            src: ["./src/assets/fonts/princeofpersia.woff2"],
           },
         ],
       },

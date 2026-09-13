@@ -192,17 +192,38 @@ const { class: className } = Astro.props
 </script>
 
 <script>
-  import { initSandsTitle } from "@/lib/sands"
+  // Three.js and the shader (src/lib/sands.ts, ~130 KB) are loaded on
+  // demand, after the page is idle, and only when the probe above found a
+  // real GPU. Before that the letters are already painted by CSS; the canvas
+  // fades in on its first frame, a beat later than when the shader was
+  // bundled with the page. The no-GPU path never downloads Three.js at all.
+  // Runs on astro:page-load (initial load and every client-side navigation)
+  // because bundled scripts only execute once under the ClientRouter; the
+  // init guards skip the persisted title.
+  const idle = (cb: () => void, timeout: number) =>
+    "requestIdleCallback" in window
+      ? window.requestIdleCallback(cb, { timeout })
+      : setTimeout(cb, 1)
 
-  // The title is on every page, so the shader is bundled and preloaded with
-  // the page script and started as early as possible; the canvas fades in
-  // on its first frame. Runs on astro:page-load (initial load and every
-  // client-side navigation) because bundled scripts only execute once
-  // under the ClientRouter; the init guard skips the persisted title.
   function boot() {
-    document
-      .querySelectorAll<HTMLElement>("[data-sands-title]")
-      .forEach(initSandsTitle)
+    const roots = [...document.querySelectorAll<HTMLElement>("[data-sands-title]")]
+    // Software GL on the home hero: show the static wisps once idle
+    // (global.css fades them in) instead of at first paint.
+    for (const r of roots) {
+      if (r.hasAttribute("data-sands-soft") && !r.hasAttribute("data-sands-static"))
+        idle(() => r.setAttribute("data-sands-static", ""), 2500)
+    }
+    const live = roots.filter(
+      (r) =>
+        !r.dataset.sandsInit &&
+        !r.hasAttribute("data-sands-static") &&
+        !r.hasAttribute("data-sands-soft")
+    )
+    if (!live.length) return
+    idle(async () => {
+      const { initSandsTitle } = await import("@/lib/sands")
+      live.forEach(initSandsTitle)
+    }, 800)
   }
   document.addEventListener("astro:page-load", boot)
 </script>
