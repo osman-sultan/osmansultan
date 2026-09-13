@@ -125,7 +125,7 @@ export const experience: Entry[] = [
       "Designed and implemented event-driven architecture for real-time systems using Redis pub-sub and Supabase, building messaging and notifications from the ground up.",
       "Migrated data models from RedisGraph to PostgreSQL by designing relational schemas that resolved structural incompatibilities while maintaining 100% uptime.",
       "Built type-safe REST APIs with Node.js and TypeScript implementing role-based authentication and PostgreSQL row-level security (RLS) for flagship application features.",
-      "Developed responsive frontend components with React (Next.js), Context for state management, and Tailwind CSS that increased daily active users by 50%.",
+      "Built responsive React (Next.js) and Tailwind CSS frontend features that increased daily active users by 50%.",
     ],
   },
   {
@@ -135,8 +135,7 @@ export const experience: Entry[] = [
     place: "Waterloo, ON",
     dates: "June 2022 – Sept 2022",
     bullets: [
-      "Transformed a legacy embedded CLI into a web app using Python, FastAPI, and Jinja, reducing testing times by 50%.",
-      "Leveraged Python's asyncio to allow multi-user concurrent testing, enhancing developer experience.",
+      "Transformed a legacy embedded CLI into a web app using Python, FastAPI, and Jinja, with asyncio for multi-user concurrent testing, reducing testing times by 50%.",
     ],
   },
 ]
