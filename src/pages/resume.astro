@@ -1,10 +1,103 @@
 ---
 import Layout from "@/layouts/main.astro"
+import { contact, education, experience, skills } from "@/data/resume"
+
+const linkClass =
+  "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
+
+const description =
+  "Resume of Osman Sultan: software engineer at Atrios, MS in Computer Science at Georgia Tech, BASc in Industrial Engineering from the University of Toronto."
+
+const sections = [
+  { heading: "Experience", list: experience },
+  { heading: "Education", list: education },
+]
 ---
 
-<Layout title="Resume">
-  <section>
-    <h1 class="font-heading text-3xl font-semibold tracking-tight">Resume</h1>
-    Lazy.
+<Layout title="Resume" description={description}>
+  <section class="flex flex-col gap-8">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+      <h1 class="font-heading text-3xl font-semibold tracking-tight">Resume</h1>
+      <a
+        href={contact.pdf}
+        class={`${linkClass} font-mono text-xs`}
+        download="Osman Sultan - Resume.pdf">download pdf</a
+      >
+    </div>
+
+    <p
+      class="flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground"
+    >
+      <a href={`mailto:${contact.email}`} class={linkClass}>{contact.email}</a>
+      <a
+        href={contact.linkedin.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={linkClass}>{contact.linkedin.label}</a
+      >
+      <a
+        href={contact.github.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={linkClass}>{contact.github.label}</a
+      >
+    </p>
+
+    {
+      sections.map(({ heading, list }) => (
+        <section class="flex flex-col gap-5">
+          <h2 class="font-medium">{heading}</h2>
+          <ol class="flex flex-col gap-6" role="list">
+            {list.map((e) => (
+              <li class="flex flex-col gap-2">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
+                  <span class="font-medium">
+                    {e.orgUrl ? (
+                      <a
+                        href={e.orgUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class={linkClass}
+                      >
+                        {e.org}
+                      </a>
+                    ) : (
+                      e.org
+                    )}
+                  </span>
+                  <span class="font-mono text-xs text-muted-foreground">
+                    {e.dates}
+                  </span>
+                  <span class="basis-full text-muted-foreground">
+                    {e.title} · {e.place}
+                  </span>
+                </div>
+                <ul class="flex list-disc flex-col gap-1.5 pl-5 leading-relaxed">
+                  {e.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+
+    <section class="flex flex-col gap-3">
+      <h2 class="font-medium">Skills</h2>
+      <dl class="flex flex-col gap-2 leading-relaxed">
+        {
+          skills.map((s) => (
+            <div class="flex flex-col gap-0.5 sm:flex-row sm:gap-4">
+              <dt class="shrink-0 font-mono text-xs text-muted-foreground sm:w-40 sm:pt-0.5">
+                {s.label}
+              </dt>
+              <dd>{s.items.join(", ")}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
   </section>
 </Layout>
