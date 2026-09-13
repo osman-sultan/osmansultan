@@ -1,0 +1,190 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+\usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-12pt}\scshape\raggedright\large
+}{ }{0em}{}[\color{black}\titlerule\vspace{-8pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-4pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-10pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-10pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}{}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\LARGE Osman Sultan} \\
+    \vspace{1pt}
+    \small{647-608-2802} $|$
+    {\href{mailto:osmansultan2002@gmail.com}{osmansultan2002@gmail.com}} $|$
+    \href{https://linkedin.com/in/osmansultan-}{linkedin.com/in/osmansultan-} $|$
+    \href{https://github.com/osman-sultan}{github.com/osman-sultan} $|$
+    \href{https://osmansultan.xyz}{osmansultan.xyz}
+\end{center}
+
+\vspace{-12pt}
+%-----------EDUCATION-----------
+\section{Education}
+    \resumeSubHeadingListStart
+        \resumeSubheading
+            {Georgia Institute of Technology}{Atlanta, GA}
+            {MS in Computer Science, Computing Systems \& Machine Learning; GPA 4.0}{Expected 2027}
+        \resumeItemListStart
+            \resumeItem{\textbf{Relevant Coursework:} Operating Systems}
+        \resumeItemListEnd
+        \resumeSubheading
+            {University of Toronto}{Toronto, ON}
+            {BASc in Industrial Engineering, Minor in Artificial Intelligence}{2025}
+        \resumeItemListStart
+            \resumeItem{\textbf{Relevant Coursework:} Operations Research, OOP, DSA, Stats/Probability, Big Data Mining, Deep Learning, Recommender Systems, Information Retrieval, Databases, Reinforcement Learning, Optimization in ML}
+        \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Python, TypeScript, Java, C, C++, SQL} \\
+     \textbf{Frameworks \& Runtimes}{: React/Next.js, Astro, Hono, Node.js, Bun, FastAPI, Spring Boot, PyTorch, Scikit-learn, Pandas, NumPy} \\
+     \textbf{AI \& Agents}{: Claude Code as an agent harness (custom skills, MCP servers, tool design), OpenAI Agents SDK, Model Context Protocol, embeddings/RAG, LLM evals} \\
+     \textbf{Cloud \& Tools}{: AWS (CDK/CloudFormation, Lambda, ECS/Fargate, API Gateway, CloudFront, S3, Aurora RDS, SQS, Cognito, Secrets Manager, CloudWatch), SST, Azure, Docker, Git, GitHub Actions}
+    }}
+ \end{itemize}
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    % Bullets drafted from the stack Osman described; numbers still to add.
+    \resumeSubheading
+    {Software Engineer}{Sept 2025 -- Present}
+    {Atrios (a16z speedrun), employee \#6}{Toronto, ON}
+    \resumeItemListStart
+        \resumeItem{Build and operate the platform backend in TypeScript with Hono on AWS, defining the infrastructure as code with CDK: API Gateway, ECS/Fargate services, Aurora RDS, SQS queues, Cognito auth, Secrets Manager, CloudFront, and CloudWatch monitoring}
+        \resumeItem{Design agentic engineering workflows on Claude Code, authoring custom skills, MCP servers, and tools that let agents work against internal systems safely, and use them to ship product features end to end}
+        \resumeItem{Own features across the stack as one of six engineers, from data model and API to React frontend, with CloudWatch-driven observability and cost control on the AWS account}
+    \resumeItemListEnd
+
+    \resumeSubheading
+    {Software Engineer Intern}{June 2025 -- Sept 2025}
+    {HealthTap}{Sunnyvale, CA}
+    \resumeItemListStart
+        \resumeItem{Built an agentic voice assistant for primary care with the OpenAI Agents SDK realtime model and Twilio, automating patient support calls for 2M+ monthly users with guardrails designed around patient safety and privacy}
+        \resumeItem{Designed tools and context for internal Model Context Protocol servers that automated customer support ticket triage}
+    \resumeItemListEnd
+
+    \resumeSubheading
+      {Software Engineer (Capstone)}{Sept 2024 -- Apr 2025}
+      {Ploopy Corporation}{Toronto, ON}
+      \resumeItemListStart
+        \resumeItem{Automated customer email responses using Azure App Service, Logic Apps, and Microsoft Graph API, reducing handling time from days to under 32 seconds}
+        \resumeItem{Developed an email matching and ranking engine with Azure OpenAI embeddings and cosine similarity in a FastAPI backend for customer inquiry processing}
+    \resumeItemListEnd
+
+    \resumeSubheading
+      {Full Stack Engineer Intern}{Sept 2023 -- Apr 2024}
+      {Doctalk Inc.}{Toronto, ON}
+      \resumeItemListStart
+        \resumeItem{Designed and implemented event-driven architecture for real-time systems using Redis pub-sub and Supabase, building messaging and notifications from the ground up}
+        \resumeItem{Migrated data models from RedisGraph to PostgreSQL by designing relational schemas that resolved structural incompatibilities while maintaining 100\% uptime}
+        \resumeItem{Built type-safe REST APIs with Node.js and TypeScript implementing role-based authentication and PostgreSQL row-level security (RLS) for flagship application features}
+        \resumeItem{Developed responsive frontend components with React (Next.js), Context for state management, and Tailwind CSS that increased daily active users by 50\%}
+    \resumeItemListEnd
+
+    \resumeSubheading
+      {Software Developer Intern}{June 2022 -- Sept 2022}
+      {Molex LLC}{Waterloo, ON}
+      \resumeItemListStart
+        \resumeItem{Transformed a legacy embedded CLI into a web app using Python, FastAPI, and Jinja, reducing testing times by 50\%}
+        \resumeItem{Leveraged Python's asyncio to allow multi-user concurrent testing, enhancing developer experience}
+    \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+\end{document}

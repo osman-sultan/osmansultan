@@ -1,0 +1,31 @@
+name: Resume PDF
+
+# Compiles resume/resume.tex and commits the result as public/resume.pdf,
+# so the site always serves the current resume. The commit lands on main
+# and triggers a normal deploy.
+on:
+  push:
+    branches: [main]
+    paths: [resume/**, .github/workflows/resume.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: xu-cheng/latex-action@v4
+        with:
+          working_directory: resume
+          root_file: resume.tex
+
+      - run: mkdir -p public && mv resume/resume.pdf public/resume.pdf
+
+      - uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore(resume): rebuild resume.pdf"
+          file_pattern: public/resume.pdf

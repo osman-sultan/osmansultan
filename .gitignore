@@ -26,3 +26,11 @@ art/
 
 # sst
 .sst
+# LaTeX build artefacts (the PDF is built in CI into public/)
+resume/*.aux
+resume/*.log
+resume/*.out
+resume/*.fls
+resume/*.fdb_latexmk
+resume/*.synctex.gz
+resume/*.pdf
