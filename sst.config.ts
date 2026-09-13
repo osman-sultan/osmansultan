@@ -94,6 +94,21 @@ export default $config({
       })
     }
 
+    // Google Search Console domain verification (TXT on the apex). The
+    // hosted zone was created by Route 53 when the domain was registered.
+    if (isProd) {
+      const zone = aws.route53.getZoneOutput({ name: "osmansultan.xyz" })
+      new aws.route53.Record("GoogleSiteVerification", {
+        zoneId: zone.zoneId,
+        name: "osmansultan.xyz",
+        type: "TXT",
+        ttl: 300,
+        records: [
+          "google-site-verification=1GHRR_g9JUItu7HRNY5rumE7U_CdIXKXcrBwnQxRvXA",
+        ],
+      })
+    }
+
     // Security headers on every response. Astro's own CSP support does not
     // work with <ClientRouter>, which the site uses, so the policy is set at
     // the CDN and inline scripts stay allowed; external sources are still
