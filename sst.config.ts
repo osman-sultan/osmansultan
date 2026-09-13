@@ -38,7 +38,14 @@ export default $config({
         ) {
           return { stage: "production" }
         }
-        if (event.type === "pull_request") {
+        // Preview stages for pull requests people open (needs a PR
+        // environment in the console's Autodeploy settings). Dependabot's
+        // bumps are checked by CI and Lighthouse; a preview would only add
+        // a CloudFront distribution per PR for nothing.
+        if (
+          event.type === "pull_request" &&
+          event.sender.username !== "dependabot[bot]"
+        ) {
           return { stage: `pr-${event.number}` }
         }
       },
