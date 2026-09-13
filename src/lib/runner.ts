@@ -1010,11 +1010,17 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
 
     // HUD.
     // The HUD sits below the window frame's top bar, which covers the top
-    // HUD_TOP px of the canvas at the corners (the arch in the middle is open).
+    // HUD_TOP px of the canvas at the corners (the arch in the middle is
+    // open). On a narrow view it is scaled down about that top edge.
+    const hud = hudScale()
+    c.save()
+    c.translate(0, HUD_TOP)
+    c.scale(hud, hud)
+    c.translate(0, -HUD_TOP)
     text(`${Math.floor(dist)} m`, 12, HUD_TOP, "left", FONT_HUD, pal.text)
     text(
       `best ${Math.floor(best)} m`,
-      VW - 12,
+      (VW - 12) / hud,
       HUD_TOP,
       "right",
       FONT_HUD,
@@ -1047,6 +1053,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
       c.fillRect(fx0, dy + dh / 2 - 2, level - fx0, 4)
     }
     text("sands of time", dx + 4, dy + dh + 2, "left", FONT_SMALL, pal.muted)
+    c.restore()
     // Time frozen: show that the dagger is the thing to hold.
     if (state === "dead" && Math.floor(blink * 2) % 2 === 0) {
       const hb = daggerHitBox()
@@ -1056,9 +1063,13 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     }
 
     // Prompts.
+    // Prompts shrink a little on a narrow view too, and get shorter.
+    const narrow = VW < 300
+    const promptFont = narrow
+      ? `${Math.round(12 * Math.max(0.75, VW / W))}px ${fontMono}`
+      : FONT_HUD
     const prompt = (str: string, y: number, fill = pal.text) =>
-      text(str, VW / 2, y, "center", FONT_HUD, fill)
-    const narrow = VW < 300 // phone slice: shorter prompts fit
+      text(str, VW / 2, y, "center", promptFont, fill)
     if (state === "idle") {
       prompt(hoverCapable ? "press space to run" : "tap to run", H / 2 - 30)
     } else if (state === "dead") {
@@ -1202,9 +1213,19 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   // jump can never turn into a rewind by accident. (It used to: a press
   // held past 250 ms rewound, which is exactly how you hold for a long jump.)
   const daggerH = Math.round((DAGGER.h / DAGGER.w) * DAGGER_W)
+  // The HUD is authored for the 400-wide view. A narrow (zoomed) view would
+  // blow it up with the scene, so it is drawn at this scale instead, which
+  // keeps it about the size it has on desktop.
+  const hudScale = () => Math.max(0.6, VW / W)
   function daggerHitBox() {
     // The dagger art plus a thumb-sized margin; logical px.
-    return { x: 0, y: HUD_TOP, w: 8 + DAGGER_W + 20, h: 14 + daggerH + 22 }
+    const k = hudScale()
+    return {
+      x: 0,
+      y: HUD_TOP,
+      w: (8 + DAGGER_W + 20) * k,
+      h: (14 + daggerH + 22) * k,
+    }
   }
   function toLogical(e: PointerEvent) {
     const rect = canvas.getBoundingClientRect()
