@@ -34,7 +34,7 @@ export const education: Entry[] = [
     place: "Toronto, ON",
     dates: "2025",
     bullets: [
-      "Relevant coursework: Operations Research, OOP, DSA, Stats/Probability, Big Data Mining, Deep Learning, Recommender Systems, Information Retrieval, Databases, Reinforcement Learning, Optimization in ML",
+      "Relevant coursework: Operations Research, OOP, DSA, Probability, Big Data Mining, Deep Learning, Recommender Systems, Information Retrieval, Databases, Reinforcement Learning",
     ],
   },
 ]
@@ -60,9 +60,9 @@ export const skills: { label: string; items: string[] }[] = [
   {
     label: "AI & agents",
     items: [
-      "Claude Code as an agent harness (custom skills, MCP servers, tool design)",
+      "Claude Code agent harness (custom skills, MCP servers, tools)",
       "OpenAI Agents SDK",
-      "Model Context Protocol",
+      "MCP",
       "embeddings/RAG",
       "LLM evals",
     ],
@@ -70,11 +70,10 @@ export const skills: { label: string; items: string[] }[] = [
   {
     label: "Cloud & tools",
     items: [
-      "AWS (CDK/CloudFormation, Lambda, ECS/Fargate, API Gateway, CloudFront, S3, Aurora RDS, SQS, Cognito, Secrets Manager, CloudWatch)",
+      "AWS (CDK, Lambda, ECS/Fargate, API Gateway, CloudFront, S3, Aurora, SQS, Cognito, CloudWatch)",
       "SST",
       "Azure",
       "Docker",
-      "Git",
       "GitHub Actions",
     ],
   },
