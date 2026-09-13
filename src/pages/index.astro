@@ -2,9 +2,40 @@
 import Layout from "@/layouts/main.astro"
 import HomeHero from "@/components/home-hero.astro"
 import SandsRunner from "@/components/sands-runner.astro"
+
+// Structured data so search engines can show a profile card for the name.
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Osman Sultan",
+  url: "https://osmansultan.xyz",
+  image: "https://osmansultan.xyz/og.png",
+  jobTitle: "Founding Engineer",
+  worksFor: { "@type": "Organization", name: "Atrios" },
+  alumniOf: [
+    { "@type": "CollegeOrUniversity", name: "University of Toronto" },
+    { "@type": "CollegeOrUniversity", name: "Georgia Institute of Technology" },
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Toronto",
+    addressRegion: "ON",
+    addressCountry: "CA",
+  },
+  sameAs: [
+    "https://github.com/osman-sultan",
+    "https://www.linkedin.com/in/osmansultan-",
+  ],
+}
 ---
 
 <Layout>
+  <script
+    is:inline
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify(person)}
+  />
   <div class="flex flex-col gap-10 pt-6 sm:pt-10">
     <HomeHero />
     <SandsRunner />
