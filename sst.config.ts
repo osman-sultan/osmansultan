@@ -6,6 +6,8 @@
 // SST Console Autodeploy sets SST_AWS_NO_PROFILE, which makes SST ignore this
 // value and use the build role instead, so it is safe to set unconditionally.
 const AWS_PROFILE = "osman-personal"
+// Where AWS Budgets sends the monthly spend alerts.
+const BUDGET_EMAIL = "osmansultan2002@gmail.com"
 
 export default $config({
   app(input) {
@@ -55,6 +57,85 @@ export default $config({
     },
   },
   async run() {
+    const isProd = $app.stage === "production"
+
+    // Owning the infrastructure means owning the surprises: email at 80% of
+    // a $5/month actual spend and when the forecast crosses 100%. Budgets are
+    // account-wide, so only the production stage creates one.
+    if (isProd) {
+      new aws.budgets.Budget("MonthlyBudget", {
+        budgetType: "COST",
+        limitAmount: "5",
+        limitUnit: "USD",
+        timeUnit: "MONTHLY",
+        notifications: [
+          {
+            comparisonOperator: "GREATER_THAN",
+            threshold: 80,
+            thresholdType: "PERCENTAGE",
+            notificationType: "ACTUAL",
+            subscriberEmailAddresses: [BUDGET_EMAIL],
+          },
+          {
+            comparisonOperator: "GREATER_THAN",
+            threshold: 100,
+            thresholdType: "PERCENTAGE",
+            notificationType: "FORECASTED",
+            subscriberEmailAddresses: [BUDGET_EMAIL],
+          },
+        ],
+      })
+    }
+
+    // Security headers on every response. Astro's own CSP support does not
+    // work with <ClientRouter>, which the site uses, so the policy is set at
+    // the CDN and inline scripts stay allowed; external sources are still
+    // locked to the site itself and PostHog.
+    const posthog = "https://us.i.posthog.com https://us-assets.i.posthog.com"
+    const headers = new aws.cloudfront.ResponseHeadersPolicy("SecurityHeaders", {
+      name: `${$app.name}-${$app.stage}-security-headers`,
+      securityHeadersConfig: {
+        strictTransportSecurity: {
+          accessControlMaxAgeSec: 63072000,
+          includeSubdomains: true,
+          preload: true,
+          override: true,
+        },
+        contentTypeOptions: { override: true },
+        frameOptions: { frameOption: "DENY", override: true },
+        referrerPolicy: {
+          referrerPolicy: "strict-origin-when-cross-origin",
+          override: true,
+        },
+        contentSecurityPolicy: {
+          contentSecurityPolicy: [
+            "default-src 'self'",
+            `script-src 'self' 'unsafe-inline' ${posthog}`,
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob:",
+            "font-src 'self'",
+            `connect-src 'self' ${posthog}`,
+            "worker-src 'self' blob:",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+            "upgrade-insecure-requests",
+          ].join("; "),
+          override: true,
+        },
+      },
+      customHeadersConfig: {
+        items: [
+          {
+            header: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), payment=()",
+            override: true,
+          },
+        ],
+      },
+    })
+
     const site = new sst.aws.Astro("Site", {
       // The site is static (see astro.config.mjs), so this is S3 + CloudFront
       // with no Lambda. `warm` and other server options do not apply.
@@ -62,10 +143,25 @@ export default $config({
       // osmansultan.xyz is registered in Route 53 on the personal account, so
       // SST creates the certificate and DNS records itself. Preview stages stay
       // on their CloudFront URLs.
-      domain:
-        $app.stage === "production"
-          ? { name: "osmansultan.xyz", redirects: ["www.osmansultan.xyz"] }
-          : undefined,
+      domain: isProd
+        ? { name: "osmansultan.xyz", redirects: ["www.osmansultan.xyz"] }
+        : undefined,
+      transform: {
+        cdn: {
+          transform: {
+            distribution: (args) => {
+              args.defaultCacheBehavior = $resolve([
+                args.defaultCacheBehavior,
+              ]).apply(([b]) => ({ ...b, responseHeadersPolicyId: headers.id }))
+              args.orderedCacheBehaviors = $resolve([
+                args.orderedCacheBehaviors ?? [],
+              ]).apply(([list]) =>
+                list.map((b) => ({ ...b, responseHeadersPolicyId: headers.id }))
+              )
+            },
+          },
+        },
+      },
     })
 
     return { url: site.url }

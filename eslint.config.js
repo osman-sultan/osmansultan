@@ -18,5 +18,14 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // shadcn components export their cva variant builders alongside the
+      // component (Button + buttonVariants). Fast refresh only matters in
+      // dev, and these names are the documented shadcn pattern.
+      "react-refresh/only-export-components": [
+        "error",
+        { allowExportNames: ["badgeVariants", "buttonVariants"] },
+      ],
+    },
   },
 ])
