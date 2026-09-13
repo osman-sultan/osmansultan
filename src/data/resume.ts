@@ -22,7 +22,7 @@ export const contact = {
 
 export const education: Entry[] = [
   {
-    title: "MS in Computer Science, Computing Systems & Machine Learning",
+    title: "MS in Computer Science",
     org: "Georgia Institute of Technology",
     place: "Atlanta, GA",
     dates: "Expected 2027",
@@ -34,7 +34,7 @@ export const education: Entry[] = [
     place: "Toronto, ON",
     dates: "2025",
     bullets: [
-      "Relevant coursework: Operations Research, OOP, DSA, Probability, Big Data Mining, Deep Learning, Recommender Systems, Information Retrieval, Databases, Reinforcement Learning",
+      "Relevant coursework: Operations Research, OOP, DSA, Stats/Probability, Big Data Mining, Deep Learning, Recommender Systems, Information Retrieval, Databases, Reinforcement Learning, Optimization in ML",
     ],
   },
 ]
@@ -42,7 +42,7 @@ export const education: Entry[] = [
 export const skills: { label: string; items: string[] }[] = [
   { label: "Languages", items: ["Python", "TypeScript", "Java", "C", "C++", "SQL"] },
   {
-    label: "Frameworks & runtimes",
+    label: "Frameworks & libraries",
     items: [
       "React/Next.js",
       "Astro",
@@ -60,21 +60,19 @@ export const skills: { label: string; items: string[] }[] = [
   {
     label: "AI & agents",
     items: [
-      "Claude Code agent harness (custom skills, MCP servers, tools)",
+      "Claude Code as an agent harness (custom skills, MCP servers, tool design)",
       "OpenAI Agents SDK",
-      "MCP",
+      "Model Context Protocol",
       "embeddings/RAG",
-      "LLM evals",
     ],
   },
   {
-    label: "Cloud & tools",
+    label: "Cloud & developer tools",
     items: [
-      "AWS (CDK, Lambda, ECS/Fargate, API Gateway, CloudFront, S3, Aurora, SQS, Cognito, CloudWatch)",
-      "SST",
+      "AWS (CDK, CloudFormation, Lambda, ECS/Fargate, API Gateway, CloudFront, S3, Aurora RDS, SQS, Cognito, Secrets Manager, CloudWatch)",
       "Azure",
       "Docker",
-      "GitHub Actions",
+      "Git",
     ],
   },
 ]
@@ -99,8 +97,8 @@ export const experience: Entry[] = [
     place: "Sunnyvale, CA",
     dates: "June 2025 – Sept 2025",
     bullets: [
-      "Built an agentic voice assistant for primary care with the OpenAI Agents SDK realtime model and Twilio, automating patient support calls for 2M+ monthly users with guardrails designed around patient safety and privacy.",
-      "Designed tools and context for internal Model Context Protocol servers that automated customer support ticket triage.",
+      "Built an agentic AI system with OpenAI Agents SDK realtime model and Twilio to automate patient support via phone calls for 2M+ monthly users.",
+      "Context engineered tools and resources using internal Model Context Protocol servers to automate customer support ticket triage processes.",
     ],
   },
   {
@@ -111,7 +109,7 @@ export const experience: Entry[] = [
     dates: "Sept 2024 – Apr 2025",
     bullets: [
       "Automated customer email responses using Azure App Service, Logic Apps, and Microsoft Graph API, reducing handling time from days to under 32 seconds.",
-      "Developed an email matching and ranking engine with Azure OpenAI embeddings and cosine similarity in a FastAPI backend for customer inquiry processing.",
+      "Developed email matching and ranking engine with Azure OpenAI embeddings and cosine similarity in a FastAPI backend for customer inquiry processing.",
     ],
   },
   {
@@ -121,10 +119,10 @@ export const experience: Entry[] = [
     place: "Toronto, ON",
     dates: "Sept 2023 – Apr 2024",
     bullets: [
-      "Designed and implemented event-driven architecture for real-time systems using Redis pub-sub and Supabase, building messaging and notifications from the ground up.",
+      "Designed and implemented event-driven architecture for real-time systems using Redis pub-sub and Supabase, building messaging + notifications from ground up.",
       "Migrated data models from RedisGraph to PostgreSQL by designing relational schemas that resolved structural incompatibilities while maintaining 100% uptime.",
       "Built type-safe REST APIs with Node.js and TypeScript implementing role-based authentication and PostgreSQL row-level security (RLS) for flagship application features.",
-      "Built responsive React (Next.js) and Tailwind CSS frontend features that increased daily active users by 50%.",
+      "Developed responsive frontend components with React (Next.js), Context for state management, and Tailwind CSS that increased daily active users by 50%.",
     ],
   },
   {
@@ -134,7 +132,8 @@ export const experience: Entry[] = [
     place: "Waterloo, ON",
     dates: "June 2022 – Sept 2022",
     bullets: [
-      "Transformed a legacy embedded CLI into a web app using Python, FastAPI, and Jinja, with asyncio for multi-user concurrent testing, reducing testing times by 50%.",
+      "Transformed a legacy embedded CLI into a web app using Python, FastAPI, and Jinja, reducing testing times by 50%.",
+      "Leveraged Python's asyncio to allow for multi-user concurrent testing, enhancing developer experience.",
     ],
   },
 ]

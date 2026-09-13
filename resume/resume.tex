@@ -22,6 +22,14 @@
 
 
 %----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
 \usepackage{charter}
 
 
@@ -102,10 +110,11 @@
     \textbf{\LARGE Osman Sultan} \\
     \vspace{1pt}
     \small{647-608-2802} $|$
+    %\small{Canadian Citizen} $|$
     {\href{mailto:osmansultan2002@gmail.com}{osmansultan2002@gmail.com}} $|$
     \href{https://linkedin.com/in/osmansultan-}{linkedin.com/in/osmansultan-} $|$
-    \href{https://github.com/osman-sultan}{github.com/osman-sultan} $|$
-    \href{https://osmansultan.xyz}{osmansultan.xyz}
+    \href{https://github.com/osman-sultan}{github.com/osman-sultan} %$|$
+    %\href{https://www.osmansultan.me/}{osmansultan.me}
 \end{center}
 
 \vspace{-12pt}
@@ -114,15 +123,15 @@
     \resumeSubHeadingListStart
         \resumeSubheading
             {Georgia Institute of Technology}{Atlanta, GA}
-            {MS in Computer Science, Computing Systems \& Machine Learning; GPA 4.0}{Expected 2027}
+            {MS in Computer Science, GPA 4.0} {Expected 2027}
         \resumeItemListStart
             \resumeItem{\textbf{Relevant Coursework:} Operating Systems}
         \resumeItemListEnd
         \resumeSubheading
             {University of Toronto}{Toronto, ON}
-            {BASc in Industrial Engineering, Minor in Artificial Intelligence}{2025}
+            {BASc in Industrial Engineering, Minor in Artificial Intelligence} {2025}
         \resumeItemListStart
-            \resumeItem{\textbf{Relevant Coursework:} Operations Research, OOP, DSA, Probability, Big Data Mining, Deep Learning, Recommender Systems, Information Retrieval, Databases, Reinforcement Learning}
+            \resumeItem{\textbf{Relevant Coursework:} Operations Research, OOP, DSA, Stats/Probability, Big Data Mining, Deep Learning, Recommender Systems, Information Retrieval, Databases, Reinforcement Learning, Optimization in ML}
         \resumeItemListEnd
     \resumeSubHeadingListEnd
 
@@ -131,19 +140,29 @@
  \begin{itemize}[leftmargin=0.15in, label={}]
     \small{\item{
      \textbf{Languages}{: Python, TypeScript, Java, C, C++, SQL} \\
-     \textbf{Frameworks \& Runtimes}{: React/Next.js, Astro, Hono, Node.js, Bun, FastAPI, Spring Boot, PyTorch, Scikit-learn, Pandas, NumPy} \\
-     \textbf{AI \& Agents}{: Claude Code agent harness (custom skills, MCP servers, tools), OpenAI Agents SDK, MCP, embeddings/RAG, LLM evals} \\
-     \textbf{Cloud \& Tools}{: AWS (CDK, Lambda, ECS/Fargate, API Gateway, CloudFront, S3, Aurora, SQS, Cognito, CloudWatch), SST, Azure, Docker, GitHub Actions}
+     \textbf{Frameworks \& Libraries}{: React/Next.js, Astro, Hono, Node.js, Bun, FastAPI, Spring Boot, PyTorch, Scikit-learn, Pandas, NumPy} \\
+     \textbf{AI \& Agents}{: Claude Code as an agent harness (custom skills, MCP servers, tool design), OpenAI Agents SDK, Model Context Protocol, embeddings/RAG} \\
+     \textbf{Cloud \& Developer Tools}{: AWS (CDK, CloudFormation, Lambda, ECS/Fargate, API Gateway, CloudFront, S3, Aurora RDS, SQS, Cognito, Secrets Manager, CloudWatch), Azure, Docker, Git}
     }}
  \end{itemize}
+
+%-----------TECHNICAL SKILLS (in-depth)-----------
+% \section{Technical Skills}
+%  \begin{itemize}[leftmargin=0.15in, label={}]
+%     \small{\item{
+%      \textbf{Languages}{: Python, JavaScript/TypeScript, Java, SQL, HTML/CSS} \\
+%      \textbf{Frameworks \& Libraries}{: React/Next.js, Vue.js, Node.js/Express, FastAPI, Spring Boot, PyTorch, Scikit-learn, Pandas, NumPy, Matplotlib, HuggingFace, LangChain, TailwindCSS} \\
+%      \textbf{Cloud \& Developer Tools}{: AWS (S3, Lambda, EC2), Azure (OpenAI, Graph API, Logic Apps, Functions), Docker, Git, Supabase, Redis, Postman, Vercel, ChromaDB, Pinecone}
+%     }}
+%  \end{itemize}
 
 %-----------EXPERIENCE-----------
 \section{Experience}
   \resumeSubHeadingListStart
 
     \resumeSubheading
-    {Software Engineer}{Sept 2025 -- Present}
-    {Atrios, employee \#6}{Toronto, ON}
+    {Software Engineer}{Sept 2025 - Present}
+    {Atrios}{Toronto, ON}
     \resumeItemListStart
         \resumeItem{Own features end to end that helped scale an a16z speedrun-backed B2B referral marketplace to \$2M ARR, spanning the matching algorithm, Stripe payments and payouts, multi-tenant auth, CRM and calendar integrations, and the vendor, connector, lead, and admin experiences in Next.js and Hono}
         \resumeItem{Develop and scale the AWS backend with CDK infrastructure-as-code (ECS Fargate, Aurora, SQS), including a PostHog-instrumented, multi-signal scoring system that predicts intent across 250 booked meetings per month and drives conversion-weighted payouts}
@@ -151,38 +170,136 @@
     \resumeItemListEnd
 
     \resumeSubheading
-    {Software Engineer Intern}{June 2025 -- Sept 2025}
+    {Software Engineer Intern}{June 2025 - Sept 2025}
     {HealthTap}{Sunnyvale, CA}
     \resumeItemListStart
-        \resumeItem{Built an agentic voice assistant for primary care with the OpenAI Agents SDK realtime model and Twilio, automating patient support calls for 2M+ monthly users with guardrails designed around patient safety and privacy}
-        \resumeItem{Designed tools and context for internal Model Context Protocol servers that automated customer support ticket triage}
+        \resumeItem{Built an agentic AI system with OpenAI Agents SDK realtime model and Twilio to automate patient support via phone calls for 2M+ monthly users}
+        \resumeItem{Context engineered tools and resources using internal Model Context Protocol servers to automate customer support ticket triage processes}
     \resumeItemListEnd
+
+    % \resumeSubheading
+    % {Software Engineer (Contractor)}{Apr 2025 - Present}
+    % {Munero Global Loyalty}{Dubai, UAE (Remote)}
+    % \resumeItemListStart
+    %     \resumeItem{Developed an AWS QuickSight dashboard visualizing order, operational, catalog, and inventory forecasts to improve reorder timing and reduce waste}
+    %     \resumeItem{Engineered scalable ETL pipelines integrating DynamoDB data into AWS workflows, enabling forecasting that decreased stockouts by 15\%}
+    % \resumeItemListEnd
 
     \resumeSubheading
       {Software Engineer (Capstone)}{Sept 2024 -- Apr 2025}
       {Ploopy Corporation}{Toronto, ON}
       \resumeItemListStart
         \resumeItem{Automated customer email responses using Azure App Service, Logic Apps, and Microsoft Graph API, reducing handling time from days to under 32 seconds}
-        \resumeItem{Developed an email matching and ranking engine with Azure OpenAI embeddings and cosine similarity in a FastAPI backend for customer inquiry processing}
+        \resumeItem{Developed email matching and ranking engine with Azure OpenAI embeddings and cosine similarity in a FastAPI backend for customer inquiry processing}
     \resumeItemListEnd
 
     \resumeSubheading
       {Full Stack Engineer Intern}{Sept 2023 -- Apr 2024}
       {Doctalk Inc.}{Toronto, ON}
       \resumeItemListStart
-        \resumeItem{Designed and implemented event-driven architecture for real-time systems using Redis pub-sub and Supabase, building messaging and notifications from the ground up}
+        \resumeItem{Designed and implemented event-driven architecture for real-time systems using Redis pub-sub and Supabase, building messaging + notifications from ground up}
         \resumeItem{Migrated data models from RedisGraph to PostgreSQL by designing relational schemas that resolved structural incompatibilities while maintaining 100\% uptime}
         \resumeItem{Built type-safe REST APIs with Node.js and TypeScript implementing role-based authentication and PostgreSQL row-level security (RLS) for flagship application features}
-        \resumeItem{Built responsive React (Next.js) and Tailwind CSS frontend features that increased daily active users by 50\%}
+        \resumeItem{Developed responsive frontend components with React (Next.js), Context for state management, and Tailwind CSS that increased daily active users by 50\%}
     \resumeItemListEnd
 
     \resumeSubheading
       {Software Developer Intern}{June 2022 -- Sept 2022}
       {Molex LLC}{Waterloo, ON}
       \resumeItemListStart
-        \resumeItem{Transformed a legacy embedded CLI into a web app using Python, FastAPI, and Jinja, with asyncio for multi-user concurrent testing, reducing testing times by 50\%}
+        \resumeItem{Transformed a legacy embedded CLI into a web app using Python, FastAPI, and Jinja, reducing testing times by 50\%}\resumeItem{Leveraged Python’s asyncio to allow for multi-user concurrent testing, enhancing developer experience}
     \resumeItemListEnd
 
   \resumeSubHeadingListEnd
+
+% %-----------LEADERSHIP-----------
+% \section{Leadership}
+%   \resumeSubHeadingListStart
+
+%     \resumeSubheading
+%         {Data Lead}{Apr 2024 -- Apr 2025}
+%         {You're Next Career Network, \href{https://yourenext.ca/}{yourenext.ca}}{Toronto, ON}
+%         \resumeItemListStart
+%             \resumeItem{Built a centralized data warehouse and ETL pipelines using PostgreSQL (Supabase) and Python to consolidate historical data and structure future data collection}
+%             \resumeItem{Developed an AI recommender system leveraging OpenAI embeddings and similarity search to match 2,000+ career fair signees with relevant companies based on their profiles and resumes}
+%     \resumeItemListEnd
+
+%     \resumeSubheading
+%       {Project Lead}{Jan 2024 -- Mar 2025}
+%       {Machine Intelligence Student Team, \href{https://utmist.ca/}{utmist.ca}}{Toronto, ON}
+%       \resumeItemListStart
+%         \resumeItem{Leading development of a conversational recommender system for education using Python, LlamaIndex, ChromaDB, and the Discord API, inspired by \href{https://arxiv.org/abs/2406.00033/}{\underline{Prof. Scott Sanner's}} research}
+%       \resumeItemListEnd
+
+%       \resumeSubheading
+%       {Partnerships Lead}{Aug 2023 -- Mar 2024}
+%       {UofT AI, \href{https://www.uoft.ai/}{uoft.ai}}{Toronto, ON}
+%     \resumeItemListStart
+%         \resumeItem{Led lead‑generation efforts, securing participation from 50+ universities - including Harvard, CMU, UPenn, and more - for ProjectX, UofT AI’s premier research hackathon}
+%     \resumeItemListEnd
+
+    % \resumeSubheading
+    %   {Cofounder}{Oct 2021 -- Dec 2023}
+    %   {UofT Freelancers Organization}{Toronto, ON}
+    %   \resumeItemListStart
+    %     \resumeItem{Led a university club delivering 5+ pro-bono web app projects for university-affiliated organizations using React.js and Bootstrap, adhering to an Agile SDLC with Git/Jira workflows. Example: \underline{\href{https://www.csceuoft.ca/}{CSCE UofT}}}
+    % \resumeItemListEnd
+
+%   \resumeSubHeadingListEnd
+
+% %-----------PROJECTS-----------
+% \section{Projects}
+%     \resumeSubHeadingListStart
+%       \resumeProjectHeading
+%         {\textbf{Lion Optimizer Paper Recreation} $|$ \emph{Python, PyTorch, Hugging Face}}{}
+%         \resumeItemListStart
+%           \resumeItem{Recreated the Lion optimizer paper under constrained resources, comparing against Adam optimizer across image classification (MNIST, Kaggle Cards) and NLP tasks (MRPC from GLUE)}
+%           \resumeItem{Performed extensive analysis using \textbf{PyTorch}, Lion-optimizer library, and \textbf{Hugging Face} transformers to evaluate optimizer performance}
+%           \resumeItem{Report: \href{https://github.com/osman-sultan/lion-optimizer}{github.com/osman-sultan/lion-optimizer}}
+%         \resumeItemListEnd
+
+    % \resumeProjectHeading
+    %       {\textbf{Underlying Factors in Soccer Injuries} $|$ \emph{Python, Scikit-learn, TensorFlow}}{}
+    %       \resumeItemListStart
+    %         \resumeItem{Investigated soccer injuries' impact on club success through data-driven analysis using \textbf{Python}, \textbf{Scikit-learn}, and \textbf{TensorFlow}.}
+    %         \resumeItem{Enhanced predictive accuracy via EDA, feature engineering, and tuning of \textbf{Random Forest}, \textbf{Logistic Regression}, and \textbf{ANN} models.}
+    %         \resumeItem{Report: \href{https://github.com/osman-sultan/Underlying-Factors-in-Soccer-Injuries}{github.com/osman-sultan/Underlying-Factors-in-Soccer-Injuries}}
+    %       \resumeItemListEnd
+
+    %   \resumeProjectHeading
+    %       {\textbf{AI Persona Generation Platform} $|$ \emph{Next.js, LangChain, TypeScript, LLMOps}}{}
+    %       \resumeItemListStart
+    %         \resumeItem{Developed SaaS platform using \textbf{React.js (Next.js)} and \textbf{Llama-2-70b} for creating AI chat personas.}
+    %         \resumeItem{Implemented retrieval-augmented generation (RAG) with \textbf{Pinecone vector database} and \textbf{Redis} for memory.}
+    %         \resumeItem{Built UI with \textbf{ShadCN} and integrated \textbf{Clerk authentication}, and \textbf{Stripe payments}.}
+    %         \resumeItem{Code: \underline{\href{https://github.com/osman-sultan/persona-ai}{github.com/osman-sultan/persona-ai}}}
+    %       \resumeItemListEnd
+
+    %   \resumeProjectHeading
+    %       {\textbf{Landscape Prediction for Climate Monitoring} $|$ \emph{Python, PyTorch}}{}
+    %       \resumeItemListStart
+    %         \resumeItem{Developed models to predict landscape changes for climate impact analysis using \textbf{Python} and \textbf{PyTorch}.}
+    %         \resumeItem{Built \textbf{VAE-inspired} generator and \textbf{EfficientNetV2}-based classifier.}
+    %         \resumeItem{Optimized pipelines using \textbf{CUDA}-powered \textbf{PyTorch}.}
+    %         \resumeItem{Code: \href{https://github.com/osman-sultan/TerraSculpt}{github.com/osman-sultan/TerraSculpt}}
+    %       \resumeItemListEnd
+
+    %   \resumeProjectHeading
+    %     {\textbf{CarKART: Automotive Marketplace} $|$ \emph{Java SpringBoot, MySQL, Vue.js, Bootstrap 5}}{}
+    %     \resumeItemListStart
+    %       \resumeItem{Led a team of 7 to build a \textbf{full-stack application} for buying and selling cars using \textbf{Agile SDLC}.}
+    %       \resumeItem{Designed backend with \textbf{Java SpringBoot}, \textbf{MVC} methodologies, and a \textbf{MySQL} database involving 5 unique \textbf{RDBMS} entities.}
+    %       \resumeItem{Developed intuitive \textbf{UI/UX} using \textbf{Bootstrap 5} and \textbf{custom Vue.js composables}  supporting \textbf{CRUD} interactions including account creation, listings, and user reviews.}
+    %       \resumeItem{Code: \underline{\href{https://github.com/osman-sultan/CarKART-BackEnd}{github.com/osman-sultan/CarKART-BackEnd}}, \underline{\href{https://github.com/osman-sultan/CarKART-FrontEnd}{github.com/osman-sultan/CarKART-FrontEnd}}}
+    %     \resumeItemListEnd
+
+    %     \resumeProjectHeading
+    %     {\textbf{Stable Marriage Problem Solver} $|$ \emph{Java, Object-oriented Programming}}{}
+    %     \resumeItemListStart
+    %       \resumeItem{Implemented in \textbf{vanilla Java} using \textbf{object-oriented principles} to handle formatted datasets with the \textbf{Gale-Shapley Algorithm}, achieving sub-10 millisecond matching with \textbf{4000 participants}, outperforming benchmark solution by \textbf{95\%} in efficiency.}
+    %       \resumeItem{Code: \href{https://github.com/osman-sultan/Stable-Marriage-Problem-Solver}{github.com/osman-sultan/Stable-Marriage-Problem-Solver}}
+    %     \resumeItemListEnd
+
+%   \resumeSubHeadingListEnd
 
 \end{document}
