@@ -133,7 +133,8 @@ async function run(name, { width, height, mobile }) {
   console.log(name, "after 2nd tap:", JSON.stringify(s2))
 
   // Hold the HUD dagger (top-left): running -> rewinding.
-  const k = s1.css[0] / 400
+  // Logical px per CSS px: the canvas height is always the world's 250.
+  const k = s1.css[1] / 250
   const hudTop = 36
   const dx = s1.left + (8 + 48) * k
   const dy = s1.top + (hudTop + 14 + 12) * k

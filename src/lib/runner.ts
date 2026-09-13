@@ -51,25 +51,31 @@ import daggerMeta from "@/assets/game/dagger.json"
 
 // Logical size. The canvas element scales this to its width, so a
 // smaller logical width means everything draws bigger on screen.
+// The world is authored at 400 x 250 (8:5, the window frame's opening).
+// The canvas height always maps to the 250 logical px, so a taller canvas
+// (the phone layout's portrait frame) shows a narrower slice of the same
+// world, zoomed to fit, rather than padding it with sky.
 const W = 400
-// The world is authored at 400 x 250 (8:5, the window frame's opening). On
-// phones the canvas is a taller 4:5, so H follows the rendered aspect ratio
-// (see resize()) and everything anchored to the ground moves down with it;
-// the extra room is sky.
-const BASE_H = 250
-let H = BASE_H
-let GROUND = H - 40 // y of the base rooftop level (screen px, y down)
+const H = 250
+let VW = W // visible width: W at 8:5, less on taller canvases (resize())
+const GROUND = H - 40 // y of the base rooftop level (screen px, y down)
 const LEVEL_H = 26 // height difference between rooftop levels
-const PLAYER_X = 80
+const PLAYER_X_MAX = 80 // where the prince stands on a full-width view
+let playerX = PLAYER_X_MAX // pulled left on narrow views so the road ahead shows
 const PLAYER_W = 12
 const GRAVITY = 1900
 const JUMP_V = -540
-const JUMP_CUT = -180 // release early: cap upward speed for a shorter hop
+// Release early and the upward speed is capped here, so a tap is a shorter
+// hop than a hold. The cap still clears a rooftop level (26 px) and a
+// kiosk (33 px): a hop from this speed peaks at about 40 px, a held jump
+// at about 77 px. (It used to be -180, an 8 px hop, so a tap could clear
+// neither, which on a phone made most jumps feel impossible.)
+const JUMP_CUT = -390
 const START_SPEED = 150
 const MAX_SPEED = 250
 const ACCEL = 2 // px/s gained per second: top speed after about 50 s
-const JUMP_BUFFER = 0.12 // a press this long before landing still jumps
-const COYOTE = 0.09 // a press this long after running off a roof still jumps
+const JUMP_BUFFER = 0.15 // a press this long before landing still jumps
+const COYOTE = 0.12 // a press this long after running off a roof still jumps
 const SAND_MAX = 4 // seconds of history the dagger can undo
 const HISTORY_SECONDS = SAND_MAX // frames kept: as much as the dagger can undo
 const REWIND_RATE = 2.2 // seconds of history undone per real second
@@ -209,6 +215,7 @@ const LAYERS: LayerSpec[] = [
 // day geometry.
 const BUILDING_SCALE = 0.2 // source px -> logical px
 const OBSTACLE_RUN_UP = 100 // roof needed in front of a kiosk, logical px
+const OBSTACLE_RUN_OUT = 90 // roof needed after one before the row may end
 type Obstacle = { x0: number; x1: number; h: number }
 type Building = {
   day: ImageMetadata
@@ -341,20 +348,6 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     const key = palette === PALETTES.dark ? "night" : "day"
     if (tiles[key].scale !== devScale) tiles[key] = emptyTiles(devScale)
     return tiles[key]
-  }
-  // Colour of a tile's top edge (its middle pixel), cached per tile: used to
-  // continue the sky above the painting on tall canvases.
-  const topColors = new WeakMap<HTMLCanvasElement, string>()
-  function topColorOf(tile: HTMLCanvasElement) {
-    let col = topColors.get(tile)
-    if (!col) {
-      const d = tile
-        .getContext("2d")!
-        .getImageData(tile.width >> 1, 0, 1, 1).data
-      col = `rgb(${d[0]}, ${d[1]}, ${d[2]})`
-      topColors.set(tile, col)
-    }
-    return col
   }
   function tileOf(
     slot: (HTMLCanvasElement | null)[],
@@ -547,14 +540,26 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     while (genX < worldX + W + 200) addPlatform()
   }
 
+  // Seconds a jump launched at `v0` px/s (upward) spends in the air before
+  // its feet are back at `dy` px relative to takeoff (negative = higher).
+  // From y(t) = -v0 t + g t^2 / 2 = dy. Zero when that height is out of reach.
+  function airTime(v0: number, dy: number) {
+    const disc = v0 * v0 + 2 * GRAVITY * dy
+    return disc < 0 ? 0 : (v0 + Math.sqrt(disc)) / GRAVITY
+  }
+
   function addPlatform() {
-    // The jump covers about speed * 0.55 s; keep gaps well inside that.
-    const jumpReach = speed * 0.55
-    const gap = 36 + rnd() * Math.max(0, jumpReach * 0.55 - 36)
     let level = lastLevel
     const r = rnd()
     if (r < 0.28) level = Math.min(1, level + 1)
     else if (r < 0.5) level = Math.max(0, level - 1)
+    // Gaps come from the physics, not a guess: the distance a plain tap
+    // (the capped hop) covers before landing on the next roof's level, at
+    // the speed the prince has now. A held jump clears them with room to
+    // spare; a tap clears them if it is not made too late.
+    const dy = (lastLevel - level) * LEVEL_H
+    const reach = speed * airTime(-JUMP_CUT, dy)
+    const gap = 24 + rnd() * Math.max(0, reach * 0.8 - 24)
     const row = buildRow(150 + rnd() * 220)
     const w = row.w
     const props: Clutter[] = []
@@ -589,7 +594,8 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     const parts: Part[] = []
     let w = 0
     let obstacle = false
-    while (w < target) {
+    let obstacleEnd = 0 // the row may not end until this far past a kiosk
+    while (w < target || w < obstacleEnd) {
       let idx = Math.floor(rnd() * BUILDINGS.length)
       for (let tries = 0; tries < BUILDINGS.length; tries++) {
         const kiosk = BUILDINGS[idx]!.obstacle !== null
@@ -600,12 +606,17 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
       }
       lastBuilding = idx
       const b = BUILDINGS[idx]!
-      if (b.obstacle) obstacle = true
       // Overlap neighbours by a pixel: scaled sprites otherwise leave a
       // hairline seam between them.
       const x = parts.length ? w - 3 : 0
       parts.push({ idx, x, w: b.w })
       w = x + b.w
+      if (b.obstacle) {
+        // Vaulting the kiosk lands the prince near this piece's end; the
+        // gap after the row must not start there or the jump is impossible.
+        obstacle = true
+        obstacleEnd = w + OBSTACLE_RUN_OUT
+      }
     }
     return { parts, w, obstacle }
   }
@@ -624,7 +635,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   function die() {
     state = "dead"
     blink = 0
-    burst(PLAYER_X, y - 8, 14, 1)
+    burst(playerX, y - 8, 14, 1)
   }
 
   // Time runs backwards from here until R is let go, the dagger is empty or
@@ -676,7 +687,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
       y += vy * dt
 
       // Land on whichever roof is under the feet, only when coming down.
-      const wx = worldX + PLAYER_X
+      const wx = worldX + playerX
       const p = platformAt(wx, PLAYER_W / 2 - 2)
       onGround = false
       if (p) {
@@ -778,7 +789,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
       emitStreaks += STREAKS_PER_S * dt
       for (; emitStreaks >= 1; emitStreaks--) {
         particles.push({
-          x: W + 10,
+          x: VW + 10,
           y: rnd() * H,
           vx: -(500 + rnd() * 500),
           vy: (rnd() - 0.5) * 40,
@@ -794,7 +805,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
         const a = rewindTime * 9 + i * 2.1 + rnd() * 0.6
         const r = 10 + rnd() * 14
         particles.push({
-          x: PLAYER_X + Math.cos(a) * r,
+          x: playerX + Math.cos(a) * r,
           y: y - 13 + Math.sin(a) * r * 0.6,
           vx: 40 + rnd() * 120,
           vy: (rnd() - 0.5) * 60,
@@ -877,16 +888,11 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
 
     // Sky backdrop: a painted image cut to the canvas shape (sun or moon
     // and stars included); a plain gradient stands in until it has loaded.
+    // The painting is the full 400 wide; on a narrow view it is aligned to
+    // the right edge so the sun or moon stays in the picture.
     const skyTile = tileOf(set.sky, 0, imageOf(night ? skyNight : skyDay), W)
-    if (skyTile) {
-      const th = skyTile.height / devScale
-      if (th < H) {
-        // Taller canvas than the painting: extend its top colour upward.
-        c.fillStyle = topColorOf(skyTile)
-        c.fillRect(0, 0, W, H - th + 1)
-      }
-      c.drawImage(skyTile, 0, H - th, W, th)
-    } else {
+    if (skyTile) c.drawImage(skyTile, VW - W, 0, W, H)
+    else {
       let sky = skyGradients.get(pal)
       if (!sky) {
         sky = c.createLinearGradient(0, 0, 0, GROUND)
@@ -895,7 +901,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
         skyGradients.set(pal, sky)
       }
       c.fillStyle = sky
-      c.fillRect(0, 0, W, H)
+      c.fillRect(0, 0, VW, H)
     }
 
     // Painted city behind the rooftops, far to near.
@@ -906,14 +912,13 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
         imageOf(night ? l.night : l.day),
         l.width
       )
-      if (tile)
-        drawTiled(c, tile, l.width, l.bottom + (H - BASE_H), l.parallax, 1)
+      if (tile) drawTiled(c, tile, l.width, l.bottom, l.parallax, 1)
     })
 
     // Rooftops.
     for (const p of platforms) {
       const sx = p.x - worldX
-      if (sx > W + 10 || sx + p.w < -10) continue
+      if (sx > VW + 10 || sx + p.w < -10) continue
       const top = levelY(p.level)
       for (const part of p.parts) {
         const b = BUILDINGS[part.idx]!
@@ -952,8 +957,8 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
 
     // Afterimages of the prince along the path being undone.
     for (const g of ghosts) {
-      const gx = PLAYER_X + (g.worldX - worldX)
-      if (gx < -20 || gx > W + 20) continue
+      const gx = playerX + (g.worldX - worldX)
+      if (gx < -20 || gx > VW + 20) continue
       // Ghosts used to be laid down as overlapping rects, each at this
       // alpha, which stacked about three deep into a denser silhouette; a
       // single blit of the sprite needs that stacking folded into its alpha.
@@ -975,32 +980,32 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     // The prince, with a soft shadow so he separates from the city behind.
     c.fillStyle = "rgba(0, 0, 0, 0.35)"
     c.beginPath()
-    c.ellipse(PLAYER_X + 2, y + 1, 11, 3, 0, 0, Math.PI * 2)
+    c.ellipse(playerX + 2, y + 1, 11, 3, 0, 0, Math.PI * 2)
     c.fill()
-    drawPrince(c, PLAYER_X, y, princeFrame())
+    drawPrince(c, playerX, y, princeFrame())
 
     // Time frozen: warm tint.
     if (state === "dead" || state === "rewinding" || state === "over") {
       c.fillStyle = pal.tint
-      c.fillRect(0, 0, W, H)
+      c.fillRect(0, 0, VW, H)
     }
 
     // Rewinding: a sand vignette closes in from the edges.
     if (state === "rewinding") {
       if (!vignette) {
         vignette = c.createRadialGradient(
-          W / 2,
+          VW / 2,
           H / 2,
           H * 0.35,
-          W / 2,
+          VW / 2,
           H / 2,
-          W * 0.62
+          VW * 0.62
         )
         vignette.addColorStop(0, "rgba(0,0,0,0)")
         vignette.addColorStop(1, REWIND_EDGE)
       }
       c.fillStyle = vignette
-      c.fillRect(0, 0, W, H)
+      c.fillRect(0, 0, VW, H)
     }
 
     // HUD.
@@ -1009,7 +1014,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     text(`${Math.floor(dist)} m`, 12, HUD_TOP, "left", FONT_HUD, pal.text)
     text(
       `best ${Math.floor(best)} m`,
-      W - 12,
+      VW - 12,
       HUD_TOP,
       "right",
       FONT_HUD,
@@ -1052,15 +1057,18 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
 
     // Prompts.
     const prompt = (str: string, y: number, fill = pal.text) =>
-      text(str, W / 2, y, "center", FONT_HUD, fill)
+      text(str, VW / 2, y, "center", FONT_HUD, fill)
+    const narrow = VW < 300 // phone slice: shorter prompts fit
     if (state === "idle") {
       prompt(hoverCapable ? "press space to run" : "tap to run", H / 2 - 30)
     } else if (state === "dead") {
       if (Math.floor(blink * 2) % 2 === 0) {
         prompt(
-          hoverCapable
-            ? "hold R or the dagger to rewind time"
-            : "hold the dagger to rewind time",
+          narrow
+            ? "hold the dagger to rewind"
+            : hoverCapable
+              ? "hold R or the dagger to rewind time"
+              : "hold the dagger to rewind time",
           H / 2 - 30
         )
       }
@@ -1090,7 +1098,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     const par = worldX * parallax
     const firstIndex = Math.floor(par / w)
     c.globalAlpha = alpha
-    for (let k = firstIndex; (k - firstIndex) * w - (par % w) < W; k++) {
+    for (let k = firstIndex; (k - firstIndex) * w - (par % w) < VW; k++) {
       const x = k * w - par
       if (k % 2 === 0) {
         c.drawImage(img, x, bottom - height, w, height)
@@ -1161,7 +1169,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     onGround = false
     coyote = 0
     jumpQueued = 0
-    burst(PLAYER_X - 4, y, 6, 0.6)
+    burst(playerX - 4, y, 6, 0.6)
   }
 
   function onKeyDown(e: KeyboardEvent) {
@@ -1200,7 +1208,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   }
   function toLogical(e: PointerEvent) {
     const rect = canvas.getBoundingClientRect()
-    const k = W / rect.width
+    const k = VW / rect.width
     return { x: (e.clientX - rect.left) * k, y: (e.clientY - rect.top) * k }
   }
   let rewindPointer = -1
@@ -1259,28 +1267,27 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     canvas.dataset.runnerSand = sand.toFixed(2)
   }
 
-  // Change the world's height (CSS decides it via the canvas aspect ratio).
-  // Anything recorded in screen y moves with the ground so a rotation
-  // mid-run does not leave the prince, or his rewind history, floating.
-  function setWorldHeight(h: number) {
-    if (h === H) return
-    const dy = h - 40 - GROUND
-    H = h
-    GROUND = h - 40
-    y += dy
-    for (const f of history) f.y += dy
-    for (const g of ghosts) g.y += dy
-    skyGradients.clear()
-    vignette = null
-  }
   function resize() {
     const rect = canvas.getBoundingClientRect()
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    if (rect.width > 0 && rect.height > 0)
-      setWorldHeight(Math.round((rect.height / rect.width) * W))
     canvas.width = Math.round(rect.width * dpr)
-    canvas.height = Math.round(((rect.width * H) / W) * dpr)
-    devScale = canvas.width / W
+    canvas.height = Math.round(rect.height * dpr)
+    if (!canvas.width || !canvas.height) return
+    // The canvas height is the world's 250 px; the width follows.
+    devScale = canvas.height / H
+    const vw = Math.min(W, Math.round(canvas.width / devScale))
+    if (vw !== VW) {
+      VW = vw
+      vignette = null
+    }
+    // On a narrow slice the prince stands about a third of the way in so
+    // the road ahead is visible; the camera shifts with him so his place
+    // in the world does not change.
+    const px = Math.round(Math.min(PLAYER_X_MAX, VW * 0.36))
+    if (px !== playerX) {
+      worldX += playerX - px
+      playerX = px
+    }
     ctx!.setTransform(devScale, 0, 0, devScale, 0, 0)
   }
   const sizeObserver = new ResizeObserver(() => {
