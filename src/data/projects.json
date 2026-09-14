@@ -3,7 +3,7 @@
     "id": "osmansultan-xyz",
     "name": "osmansultan.xyz",
     "type": "web",
-    "description": "A personal site built with Astro and deployed to AWS with SST, with Vercel-like features including autodeployments, PR previews, analytics, logs, a custom domain with HTTPS, security headers, and budget alerts, without the vendor lock-in. Inspired by Prince of Persia and Assassin's Creed.",
+    "description": "A personal site built with Astro and deployed to AWS with SST, with Vercel-like features including autodeployments, PR previews, analytics, logs, and security, without the vendor lock-in. Inspired by Prince of Persia and Assassin's Creed.",
     "date": "summer 2026",
     "group": "recent",
     "image": "../assets/projects/osmansultan.png",
