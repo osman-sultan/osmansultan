@@ -1,6 +1,6 @@
 # osmansultan.xyz
 
-my personal site. astro, deployed to aws via [sst.dev](https://sst.dev).
+my personal site, built with astro and deployed to aws via [sst.dev](https://sst.dev).
 
 the home page has a prince of persia themed title with a sand shader (three.js) and a small rooftop runner drawn on a canvas. you can rewind time in it.
 
