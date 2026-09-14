@@ -13,7 +13,7 @@
     "id": "photamems",
     "name": "photamems",
     "type": "ml/ai",
-    "description": "A memory gallery built at Hack the North 2025. Snap Spectacles capture photos and audio, Gemini tags and describes each moment, and a FastAPI backend lets you search them by meaning or browse them on a map.",
+    "description": "A memory gallery built at Hack the North 2025. Snap Spectacles capture photos and audio, Gemini tags and describes each moment, and a FastAPI backend lets you semantically search them or browse them on a map.",
     "date": "summer 2025",
     "group": "recent",
     "image": "../assets/projects/photamems.png",
