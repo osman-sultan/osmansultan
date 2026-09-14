@@ -34,3 +34,6 @@ resume/*.fls
 resume/*.fdb_latexmk
 resume/*.synctex.gz
 resume/*.pdf
+
+# agent instructions, kept local
+CLAUDE.md
