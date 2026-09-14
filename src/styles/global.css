@@ -365,14 +365,16 @@ html::view-transition-new(site-title) {
    sand halo colours in light mode, the dark theme's teal-navy page run in
    dark mode. */
 :root {
-  --slab-gradient: linear-gradient(135deg, #ffe9a8 0%, #ffc84d 45%, #f07817 100%);
+  /* Pale gold to warm amber: the halo's inner colours, without its orange edge. */
+  --slab-gradient: linear-gradient(135deg, #fff1c4 0%, #ffd873 50%, #f2b34a 100%);
 }
 .dark {
+  /* Brighter teal at the leading corner so the slab reads against the navy page. */
   --slab-gradient: linear-gradient(
     135deg,
-    oklch(0.55 0.15 220) 0%,
-    oklch(0.4 0.135 225) 50%,
-    oklch(0.22 0.08 234) 100%
+    oklch(0.74 0.13 205) 0%,
+    oklch(0.52 0.14 222) 55%,
+    oklch(0.3 0.1 232) 100%
   );
 }
 
