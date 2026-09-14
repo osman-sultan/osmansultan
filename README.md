@@ -50,3 +50,7 @@ scripts/            game art slicer, portrait frame builder, headless game check
 ## checking the game
 
 `node scripts/check-runner.mjs http://localhost:4321/ <outdir>` drives a headless chrome through a tap, a jump and a rewind at phone and desktop sizes and saves screenshots. chrome's `--screenshot` flag is not reliable for the game because its idle-callback boot may not run under a virtual clock.
+
+## license
+
+the code is under the gnu affero general public license v3.0, see `LICENSE`. the writing, the resume, the project screenshots, the game art and the fonts are mine or third-party and are not covered by it.
