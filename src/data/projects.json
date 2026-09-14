@@ -1,5 +1,25 @@
 [
   {
+    "id": "osmansultan-xyz",
+    "name": "osmansultan.xyz",
+    "type": "web",
+    "description": "This site. Astro on S3 and CloudFront, all of it as code with SST; a GLSL sand shader for the title and a Prince of Persia runner you can rewind.",
+    "date": "summer 2026",
+    "group": "recent",
+    "image": "../assets/projects/osmansultan.png",
+    "link": "https://github.com/osman-sultan/osmansultan"
+  },
+  {
+    "id": "photamems",
+    "name": "photamems",
+    "type": "ml/ai",
+    "description": "Hack the North 2025. Snap Spectacles capture your day, Gemini tags and narrates it, and you chat with your own memories on a map.",
+    "date": "summer 2025",
+    "group": "recent",
+    "image": "../assets/projects/photamems.png",
+    "link": "https://devpost.com/software/photamems"
+  },
+  {
     "id": "lion-optimizer",
     "name": "lion optimizer paper recreation",
     "type": "ml/ai",

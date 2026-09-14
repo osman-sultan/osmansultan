@@ -7,7 +7,16 @@ import { badgeVariants } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-const projects = await getCollection("projects")
+// The file loader returns entries in id order; show newest first instead,
+// reading the season and year out of each `date` ("summer 2026").
+const SEASON: Record<string, number> = { winter: 0, spring: 1, summer: 2, fall: 3 }
+const when = (date: string) => {
+  const [season = "", year = "0"] = date.toLowerCase().split(" ")
+  return Number(year) * 10 + (SEASON[season] ?? 0)
+}
+const projects = (await getCollection("projects")).sort(
+  (a, b) => when(b.data.date) - when(a.data.date)
+)
 
 const groups = [
   { key: "recent", title: "Recent" },
