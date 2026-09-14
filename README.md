@@ -1,19 +1,19 @@
 # osmansultan.xyz
 
-Personal site of Osman Sultan. Astro, deployed to AWS via [sst.dev](https://sst.dev).
+my personal site. astro, deployed to aws via [sst.dev](https://sst.dev).
 
-The home page has a Prince of Persia themed title with a sand shader (Three.js) and a small rooftop runner drawn on a canvas. You can rewind time in it.
+the home page has a prince of persia themed title with a sand shader (three.js) and a small rooftop runner drawn on a canvas. you can rewind time in it.
 
-## Stack
+## stack
 
-- Astro 7 with React islands, Tailwind 4, shadcn/ui
-- Bun for installs and scripts
-- SST: S3 and CloudFront for the static site, Route 53 for the domain, a CloudFront response headers policy, and an AWS Budgets alert, all in `sst.config.ts`
-- SST Console Autodeploy: a push to `main` deploys production, pull requests get a `pr-<n>` preview stage
-- GitHub Actions: lint and typecheck, Lighthouse on every push and PR, and a LaTeX build of the resume
-- PostHog for analytics and web vitals
+- astro 7 with react islands, tailwind 4, shadcn/ui
+- bun for installs and scripts
+- sst: s3 and cloudfront for the static site, route 53 for the domain, a cloudfront response headers policy, and an aws budgets alert, all in `sst.config.ts`
+- sst console autodeploy: a push to `main` deploys production, pull requests get a `pr-<n>` preview stage
+- github actions: lint and typecheck, lighthouse on every push and pr, and a latex build of the resume
+- posthog for analytics and web vitals
 
-## Running it
+## running it
 
 ```sh
 bun install
@@ -23,18 +23,18 @@ bun run typecheck
 bun run lint
 ```
 
-On Windows, build from a path with a capital `D` in `Documents`, or the CSS is dropped from the output.
+on windows, build from a path with a capital `D` in `Documents`, or the css is dropped from the output.
 
-## Deploying
+## deploying
 
-Pushing to `main` is the deploy. To deploy by hand:
+pushing to `main` is the deploy. to deploy by hand:
 
 ```sh
 aws sso login --sso-session osman-personal
 bunx sst deploy --stage production
 ```
 
-## Layout
+## layout
 
 ```
 src/pages/          one file per page
@@ -43,10 +43,10 @@ src/lib/sands.ts    the title's sand shader
 src/lib/runner.ts   the runner game
 src/data/           projects.json (content collection)
 src/assets/         fonts, project images, game art
-resume/resume.tex   resume source; CI builds public/resume.pdf from it
+resume/resume.tex   resume source; ci builds public/resume.pdf from it
 scripts/            game art slicer, portrait frame builder, headless game check
 ```
 
-## Checking the game
+## checking the game
 
-`node scripts/check-runner.mjs http://localhost:4321/ <outdir>` drives a headless Chrome through a tap, a jump and a rewind at phone and desktop sizes and saves screenshots. Chrome's `--screenshot` flag is not reliable for the game because its idle-callback boot may not run under a virtual clock.
+`node scripts/check-runner.mjs http://localhost:4321/ <outdir>` drives a headless chrome through a tap, a jump and a rewind at phone and desktop sizes and saves screenshots. chrome's `--screenshot` flag is not reliable for the game because its idle-callback boot may not run under a virtual clock.
