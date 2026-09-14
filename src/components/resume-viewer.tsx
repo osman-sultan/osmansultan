@@ -15,10 +15,9 @@ const linkClass =
   "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
 
 // A US-letter-shaped box in the theme's card colour: what shows while the
-// PDF loads, and what the rendered page sits on. The hard offset shadow in
-// the link colour is the v2 look, brought over.
-const sheetClass =
-  "relative aspect-[17/22] w-full bg-card shadow-[10px_10px_0_0_var(--link)] sm:shadow-[14px_14px_0_0_var(--link)]"
+// PDF loads, and what the rendered page sits on. `.resume-sheet` (global.css)
+// puts an offset gradient slab behind it, the v2 look in this site's palette.
+const sheetClass = "resume-sheet relative aspect-[17/22] w-full bg-card"
 
 function Sheet({ children }: { children: React.ReactNode }) {
   return (
