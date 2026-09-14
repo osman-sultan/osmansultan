@@ -1,0 +1,60 @@
+---
+title: how i write here
+description: what this logbook is and how a post gets from a markdown file onto the site.
+date: 2026-09-13
+tags: [meta]
+---
+
+import { Highlighter } from "@/components/ui/highlighter"
+import { AtriosCard } from "@/components/atrios-card"
+
+this is the logbook. each entry is a markdown file in the site's repo, and pushing to `main` publishes it. there is no cms behind it, which is the point: i write, i push, it's up.
+
+## a post
+
+every file starts with a few lines of frontmatter, then the writing:
+
+```md
+---
+title: how i write here
+description: one line for the list page and link previews.
+date: 2026-09-13
+---
+
+the post, in plain markdown.
+```
+
+the date is when i wrote it. the read time is worked out from the word count at build time, so there is nothing to fill in. `updated`, `tags` and `draft: true` are optional.
+
+## what i can use
+
+everything github-flavoured markdown gives me: headings, lists, links, images, tables, footnotes[^1], quotes, and code with syntax highlighting.
+
+> a logbook is not a diary. it records what was tried and what happened, so the next attempt starts further along.
+
+```ts
+// how the read time on this page is computed
+import readingTime from "reading-time"
+
+export function readTime(body: string) {
+  return readingTime(body).text // "3 min read"
+}
+```
+
+| field         | required | what it does                          |
+| ------------- | -------- | ------------------------------------- |
+| `title`       | yes      | the heading and the browser tab       |
+| `description` | yes      | the line under it, and link previews  |
+| `date`        | yes      | date written, shown with the read time |
+| `updated`     | no       | shown at the bottom when set          |
+| `draft`       | no       | `true` keeps it off the built site    |
+
+## interactive bits
+
+a post with an `.mdx` extension can import components from the site. this is a <Highlighter action="underline" color="currentColor" animationDuration={1600} padding={-3} isView viewMargin="-35% 0px -35% 0px" client:visible>rough underline</Highlighter> that draws itself when it scrolls into view, and <AtriosCard client:load /> is the same hover card as on the about page. anything react can do, a post can do.
+
+## following along
+
+there is an [rss feed](/logbook/rss.xml) at `/logbook/rss.xml`.
+
+[^1]: like this one.

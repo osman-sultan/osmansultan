@@ -1,0 +1,147 @@
+---
+import { render } from "astro:content"
+
+import Layout from "@/layouts/main.astro"
+import CodeFence from "@/components/code-fence.astro"
+import ReadProgress from "@/components/read-progress.astro"
+import { badgeVariants } from "@/components/ui/badge"
+import { PostMinimap } from "@/components/post-minimap"
+import { cn } from "@/lib/utils"
+import {
+  AUTHOR,
+  formatDate,
+  getPosts,
+  isoDate,
+  readTime,
+  type Post,
+} from "@/lib/logbook"
+
+export async function getStaticPaths() {
+  // Newest first, so the neighbours are the next newer and older posts.
+  const posts = await getPosts()
+  return posts.map((post, i) => ({
+    params: { id: post.id },
+    props: { post, newer: posts[i - 1] ?? null, older: posts[i + 1] ?? null },
+  }))
+}
+
+interface Props {
+  post: Post
+  newer: Post | null
+  older: Post | null
+}
+
+const { post, newer, older } = Astro.props
+const { Content } = await render(post)
+
+const linkClass =
+  "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <link
+    slot="head"
+    rel="alternate"
+    type="application/rss+xml"
+    title="Osman Sultan's logbook"
+    href={new URL("/logbook/rss.xml", Astro.site)}
+  />
+  <ReadProgress />
+  <div class="relative">
+    <!-- Minimap rail, as in the rare-ui docs: a sticky aside beside the
+         content, centred in the viewport. The aside is a full-height column
+         in the right gutter so the sticky box rides along the post and stops
+         at its end. Its dashes are read from the rendered post (post-minimap). -->
+    <aside class="absolute top-0 left-full hidden h-full xl:block">
+      <div class="sticky top-24 h-[calc(100vh-12rem)]">
+        <PostMinimap
+          client:media="(min-width: 80rem)"
+          side="left"
+          activeOffset={0.4}
+        />
+      </div>
+    </aside>
+    <article data-post class="flex flex-col gap-8">
+      <header class="flex flex-col gap-3">
+        <h1
+          id="post-title"
+          class="scroll-mt-12 font-heading text-3xl font-semibold tracking-tight"
+        >
+          {post.data.title}
+        </h1>
+        <p class="text-base leading-relaxed text-muted-foreground">
+          {post.data.description}
+        </p>
+        <p
+          class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-muted-foreground"
+        >
+          <a href={AUTHOR.href} class="text-foreground">{AUTHOR.name}</a>
+          <span aria-hidden="true">·</span>
+          <time datetime={isoDate(post.data.date)}>
+            {formatDate(post.data.date)}
+          </time>
+          <span aria-hidden="true">·</span>
+          <span>{readTime(post)}</span>
+          {
+            post.data.tags.map((tag) => (
+              <span
+                class={cn(
+                  badgeVariants({ variant: "outline" }),
+                  "rounded-none"
+                )}
+              >
+                {tag}
+              </span>
+            ))
+          }
+        </p>
+      </header>
+
+      <!-- Markdown body. The `prose` palette is mapped to the theme tokens in
+         global.css, so it follows the light/dark switch on its own. -->
+      <div
+        class="prose max-w-none prose-headings:font-heading prose-headings:font-semibold prose-headings:tracking-tight prose-a:text-link prose-a:underline-offset-4 prose-a:transition-opacity hover:prose-a:opacity-70 prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-none prose-img:border prose-img:border-border"
+      >
+        <Content components={{ pre: CodeFence }} />
+      </div>
+
+      <footer
+        class="flex flex-col gap-4 border-t border-border pt-6 font-mono text-xs text-muted-foreground"
+      >
+        {
+          post.data.updated && (
+            <p>
+              updated{" "}
+              <time datetime={isoDate(post.data.updated)}>
+                {formatDate(post.data.updated)}
+              </time>
+            </p>
+          )
+        }
+        <nav class="flex justify-between gap-6" aria-label="Other posts">
+          {
+            older ? (
+              <a href={`/logbook/${older.id}`} class={linkClass}>
+                older: {older.data.title}
+              </a>
+            ) : (
+              <a href="/logbook" class={linkClass}>
+                all posts
+              </a>
+            )
+          }
+          {
+            newer && (
+              <a
+                href={`/logbook/${newer.id}`}
+                class={cn(linkClass, "text-end")}
+              >
+                newer: {newer.data.title}
+              </a>
+            )
+          }
+        </nav>
+      </footer>
+    </article>
+  </div>
+</Layout>

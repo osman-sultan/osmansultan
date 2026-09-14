@@ -1,0 +1,45 @@
+---
+/**
+ * Renders a Markdown code fence through the rare-ui CodeBlock island.
+ *
+ * Passed to `<Content components={{ pre: CodeFence }} />` on MDX posts, so a
+ * plain ```ts fence becomes a framed block with a copy button, line numbers
+ * and a theme that follows the page. Syntax highlighting is switched off for
+ * MDX in astro.config.mjs, so the slot holds the raw, HTML-escaped source
+ * inside `<code class="language-…">`.
+ */
+import { CodeBlock } from "@/components/ui/code-block"
+
+const html = await Astro.slots.render("default")
+const match = html.match(
+  /<code(?:\s+class="language-([^"\s]+)")?[^>]*>([\s\S]*?)<\/code>/
+)
+const language = match?.[1] ?? "text"
+const code = (match?.[2] ?? html).replace(
+  /&(lt|gt|amp|quot|#39|#x27|#x3C|#x3E|#x26|#x22);/g,
+  (_, entity: string) =>
+    ({
+      lt: "<",
+      gt: ">",
+      amp: "&",
+      quot: '"',
+      "#39": "'",
+      "#x27": "'",
+      "#x3C": "<",
+      "#x3E": ">",
+      "#x26": "&",
+      "#x22": '"',
+    })[entity] ?? ""
+)
+---
+
+<!-- not-prose keeps the typography plugin's <pre> rules off the block. -->
+<div class="not-prose my-6">
+  <CodeBlock
+    client:load
+    code={code}
+    language={language}
+    accent="#f59714"
+    className="rounded-none"
+  />
+</div>

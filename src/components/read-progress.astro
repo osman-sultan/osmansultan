@@ -1,0 +1,54 @@
+---
+/**
+ * Thin bar along the top of the viewport that fills as the reader scrolls
+ * through the element marked `data-post`. Pages without one show nothing.
+ */
+---
+
+<div
+  data-read-progress
+  class="fixed inset-x-0 top-0 z-50 h-0.5 origin-left scale-x-0 bg-link transition-transform duration-75 ease-linear"
+  aria-hidden="true"
+>
+</div>
+
+<script>
+  // Bundled scripts run once per session, so (re)bind on every page load and
+  // drop the listeners before the ClientRouter swaps the page out.
+  function setup() {
+    const bar = document.querySelector<HTMLElement>("[data-read-progress]")
+    const post = document.querySelector<HTMLElement>("[data-post]")
+    if (!bar || !post) return
+
+    const controller = new AbortController()
+    const { signal } = controller
+    let queued = false
+
+    const update = () => {
+      queued = false
+      const rect = post.getBoundingClientRect()
+      const top = rect.top + window.scrollY
+      // Full once the end of the post is in view.
+      const travel = rect.height - window.innerHeight
+      const progress =
+        travel <= 0
+          ? 1
+          : Math.min(1, Math.max(0, (window.scrollY - top) / travel))
+      bar.style.transform = `scaleX(${progress})`
+    }
+    const schedule = () => {
+      if (queued) return
+      queued = true
+      requestAnimationFrame(update)
+    }
+
+    window.addEventListener("scroll", schedule, { passive: true, signal })
+    window.addEventListener("resize", schedule, { signal })
+    document.addEventListener("astro:before-swap", () => controller.abort(), {
+      once: true,
+    })
+    update()
+  }
+
+  document.addEventListener("astro:page-load", setup)
+</script>

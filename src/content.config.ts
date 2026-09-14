@@ -1,4 +1,4 @@
-import { file } from "astro/loaders"
+import { file, glob } from "astro/loaders"
 import { z } from "astro/zod"
 import { defineCollection } from "astro:content"
 
@@ -20,4 +20,22 @@ const projects = defineCollection({
     }),
 })
 
-export const collections = { projects }
+// Logbook posts: one Markdown (or MDX, for posts that embed components)
+// file each in src/content/logbook. The file name
+// is the URL (`hello.md` -> /logbook/hello); a `slug` in the frontmatter
+// overrides it. Read time is computed from the body, see src/lib/logbook.ts.
+const logbook = defineCollection({
+  loader: glob({ base: "./src/content/logbook", pattern: "**/*.{md,mdx}" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    // Date written, as YYYY-MM-DD.
+    date: z.coerce.date(),
+    updated: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
+    // Drafts are left out of the built site (they still show in `astro dev`).
+    draft: z.boolean().default(false),
+  }),
+})
+
+export const collections = { projects, logbook }

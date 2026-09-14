@@ -1,0 +1,55 @@
+---
+import Layout from "@/layouts/main.astro"
+import { formatDate, getPosts, isoDate, readTime } from "@/lib/logbook"
+
+const posts = await getPosts()
+const linkClass =
+  "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
+---
+
+<Layout
+  title="Logbook"
+  description="Osman Sultan's logbook: notes on what I'm building and learning."
+>
+  <link
+    slot="head"
+    rel="alternate"
+    type="application/rss+xml"
+    title="Osman Sultan's logbook"
+    href={new URL("/logbook/rss.xml", Astro.site)}
+  />
+  <section class="flex flex-col gap-8 leading-relaxed">
+    <p>
+      notes on what i'm building and learning. there is an{" "}
+      <a href="/logbook/rss.xml" class={linkClass}>rss feed</a> if you want new entries
+      to come to you.
+    </p>
+
+    {
+      posts.length ? (
+        <ul class="flex flex-col gap-8" role="list">
+          {posts.map((post) => (
+            <li class="flex flex-col gap-1.5">
+              <a
+                href={`/logbook/${post.id}`}
+                class="font-heading text-lg font-medium tracking-tight transition-opacity hover:opacity-70"
+              >
+                {post.data.title}
+              </a>
+              <p class="font-mono text-xs text-muted-foreground">
+                <time datetime={isoDate(post.data.date)}>
+                  {formatDate(post.data.date)}
+                </time>
+                {" · "}
+                {readTime(post)}
+              </p>
+              <p class="text-muted-foreground">{post.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-muted-foreground">Nothing here yet.</p>
+      )
+    }
+  </section>
+</Layout>

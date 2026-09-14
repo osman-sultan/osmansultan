@@ -11,6 +11,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+// Dotted: the site's convention for text that reveals something on hover or
+// tap (see the trigger rule in global.css), as opposed to a plain link.
+const triggerClass =
+  "text-link underline decoration-dotted underline-offset-4 transition-opacity hover:opacity-70"
 const linkClass =
   "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
 
@@ -44,7 +48,7 @@ export function AtriosCard() {
   if (!canHover) {
     return (
       <Popover>
-        <PopoverTrigger className={`cursor-pointer ${linkClass}`}>
+        <PopoverTrigger className={`cursor-pointer ${triggerClass}`}>
           Atrios
         </PopoverTrigger>
         <PopoverContent
@@ -76,7 +80,7 @@ export function AtriosCard() {
         href="https://atrios.com"
         target="_blank"
         rel="noopener noreferrer"
-        className={linkClass}
+        className={triggerClass}
       >
         Atrios
       </HoverCardTrigger>

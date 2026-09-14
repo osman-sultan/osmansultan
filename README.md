@@ -42,10 +42,15 @@ src/components/     the title, the runner, the resume viewer, shadcn/ui
 src/lib/sands.ts    the title's sand shader
 src/lib/runner.ts   the runner game
 src/data/           projects.json (content collection)
+src/content/logbook/ one markdown file per logbook post
 src/assets/         fonts, project images, game art
 resume/resume.tex   resume source; ci builds public/resume.pdf from it
 scripts/            game art slicer, portrait frame builder, headless game check
 ```
+
+## writing a logbook post
+
+add a markdown file to `src/content/logbook/`; its file name is the url. use the `.mdx` extension when a post imports components from the site; in `.mdx` posts, code fences render through the rare-ui code block (copy button, line numbers), and in `.md` posts through shiki. the frontmatter needs `title`, `description` and `date` (yyyy-mm-dd), and can have `updated`, `tags` and `draft: true`. read time is computed from the body. push to `main` and it is live; the feed is at `/logbook/rss.xml`.
 
 ## checking the game
 

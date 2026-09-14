@@ -23,6 +23,9 @@ interface HighlighterProps {
   padding?: number
   multiline?: boolean
   isView?: boolean
+  /** How far inside the viewport the element must be before it draws (an
+   * IntersectionObserver rootMargin, negative shrinks the trigger area). */
+  viewMargin?: string
 }
 
 export function Highlighter({
@@ -35,12 +38,13 @@ export function Highlighter({
   padding = 2,
   multiline = true,
   isView = false,
+  viewMargin = "-10%",
 }: HighlighterProps) {
   const elementRef = useRef<HTMLSpanElement>(null)
 
   const isInView = useInView(elementRef, {
     once: true,
-    margin: "-10%",
+    margin: viewMargin as never,
   })
 
   // If isView is false, always show. If isView is true, wait for inView

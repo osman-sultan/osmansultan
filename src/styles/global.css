@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/merriweather";
 @import "@fontsource-variable/outfit";
+/* `prose` classes for the logbook's Markdown; palette mapped below. */
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -392,4 +394,69 @@ html::view-transition-new(site-title) {
   .resume-sheet::before {
     translate: 14px 14px;
   }
+}
+
+/* ---- Logbook posts (Markdown through @tailwindcss/typography) ------------
+   The prose palette points at the theme tokens, which already swap with the
+   `.dark` class, so no `prose-invert` is needed. */
+.prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--link);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--muted-foreground);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--link);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-kbd: var(--foreground);
+  --tw-prose-kbd-shadows: 0 0 0;
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: var(--foreground);
+  --tw-prose-pre-bg: var(--card);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
+/* Inline code as a quiet chip; the backtick pseudo-elements are turned off
+   on the page with prose-code:before/after:content-none. */
+.prose :not(pre) > code {
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  background-color: var(--muted);
+  font-weight: 500;
+}
+
+/* Shiki code blocks: pick the light or dark token colours by theme (the
+   Astro config emits both as variables, with no default colour). The block
+   itself sits on the card colour with a border, like the project cards. */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+.prose .astro-code {
+  border: 1px solid var(--border);
+  background-color: var(--card);
+}
+
+/* ---- Hover-reveal triggers ---------------------------------------------
+   Text that opens a hover card, popover or tooltip is underlined dotted, on
+   every page, so it reads differently from a plain link. Keyed on the
+   shadcn trigger slots so new triggers pick it up without extra classes. */
+[data-slot="hover-card-trigger"],
+[data-slot="popover-trigger"],
+[data-slot="tooltip-trigger"] {
+  text-decoration-style: dotted;
 }
