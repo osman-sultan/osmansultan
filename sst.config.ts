@@ -135,7 +135,7 @@ export default $config({
             `script-src 'self' 'unsafe-inline' ${posthog}`,
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob:",
-            "font-src 'self'",
+            "font-src 'self' data:", // PDF.js loads embedded PDF fonts via data: URLs
             `connect-src 'self' ${posthog}`,
             "worker-src 'self' blob:",
             "object-src 'none'",

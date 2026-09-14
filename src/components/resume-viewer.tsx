@@ -1,3 +1,4 @@
+import "@/lib/polyfills"
 import { useEffect, useRef, useState } from "react"
 import { Document, Page, pdfjs } from "react-pdf"
 import "react-pdf/dist/Page/AnnotationLayer.css"
@@ -13,15 +14,31 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const linkClass =
   "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
 
+// A US-letter-shaped box in the theme's card colour: what shows while the
+// PDF loads, and what the rendered page sits on. The hard offset shadow in
+// the link colour is the v2 look, brought over.
+const sheetClass =
+  "relative aspect-[17/22] w-full bg-card shadow-[10px_10px_0_0_var(--link)] sm:shadow-[14px_14px_0_0_var(--link)]"
+
+function Sheet({ children }: { children: React.ReactNode }) {
+  return (
+    <div className={`${sheetClass} flex items-center justify-center`}>
+      <p className="px-6 text-center text-muted-foreground">{children}</p>
+    </div>
+  )
+}
+
 /**
  * The resume PDF rendered on the page (as in v2 of the site), every page at
  * the container's width, with the text layer on top so it can be selected
- * and searched. If the PDF cannot be rendered the fallback is a plain link.
+ * and searched. If the PDF cannot be rendered, the sheet says why and links
+ * to the file.
  */
 export function ResumeViewer({ file }: { file: string }) {
   const host = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState<number>()
   const [pages, setPages] = useState(0)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const el = host.current
@@ -33,34 +50,43 @@ export function ResumeViewer({ file }: { file: string }) {
     return () => ro.disconnect()
   }, [])
 
+  const fail = (e: Error) => setError(e.message || String(e))
+
   return (
-    <div ref={host} className="flex w-full flex-col gap-4">
-      <Document
-        file={file}
-        onLoadSuccess={({ numPages }) => setPages(numPages)}
-        loading={<p className="text-muted-foreground">loading the pdf…</p>}
-        error={
-          <p className="text-muted-foreground">
-            the pdf could not be rendered here.{" "}
-            <a href={file} className={linkClass}>
-              open it directly
-            </a>
-            .
-          </p>
-        }
-      >
-        {width
-          ? Array.from({ length: pages }, (_, i) => (
-              <Page
-                key={i}
-                pageNumber={i + 1}
-                width={width}
-                devicePixelRatio={Math.min(2, window.devicePixelRatio || 1)}
-                className="border border-border bg-white shadow-sm"
-              />
-            ))
-          : null}
-      </Document>
+    // Right and bottom room for the offset shadow.
+    <div ref={host} className="flex w-full flex-col gap-8 pr-[10px] pb-[10px] sm:pr-[14px] sm:pb-[14px]">
+      {error ? (
+        <Sheet>
+          the pdf could not be rendered here ({error}).{" "}
+          <a href={file} className={linkClass}>
+            open it directly
+          </a>
+          .
+        </Sheet>
+      ) : (
+        <Document
+          file={file}
+          onLoadSuccess={({ numPages }) => setPages(numPages)}
+          onLoadError={fail}
+          onSourceError={fail}
+          loading={<Sheet>loading the pdf…</Sheet>}
+          noData={<Sheet>no pdf.</Sheet>}
+        >
+          {width
+            ? Array.from({ length: pages }, (_, i) => (
+                <Page
+                  key={i}
+                  pageNumber={i + 1}
+                  width={width}
+                  devicePixelRatio={Math.min(2, window.devicePixelRatio || 1)}
+                  onRenderError={fail}
+                  loading={<Sheet>rendering…</Sheet>}
+                  className={sheetClass}
+                />
+              ))
+            : null}
+        </Document>
+      )}
     </div>
   )
 }
