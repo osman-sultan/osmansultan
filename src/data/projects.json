@@ -2,8 +2,10 @@
   {
     "id": "osmansultan-xyz",
     "name": "osmansultan.xyz",
-    "type": "web",
-    "description": "A personal site built with Astro and deployed to AWS with SST, with Vercel-like features including autodeployments, PR previews, analytics, logs, and security, without the vendor lock-in. Inspired by Prince of Persia and Assassin's Creed.",
+    "types": [
+      "web"
+    ],
+    "description": "A personal site built with Astro and deployed to AWS via sst.dev, with Vercel-like features including autodeployments, PR previews, analytics, logs, and security, without the vendor lock-in. Inspired by Prince of Persia and Assassin's Creed.",
     "date": "summer 2026",
     "group": "recent",
     "image": "../assets/projects/osmansultan.png",
@@ -12,7 +14,10 @@
   {
     "id": "photamems",
     "name": "photamems",
-    "type": "ml/ai",
+    "types": [
+      "ml/ai",
+      "web"
+    ],
     "description": "A memory gallery built at Hack the North 2025. Snap Spectacles capture photos and audio, Gemini tags and describes each moment, and a FastAPI backend lets you semantically search them or browse them on a map.",
     "date": "summer 2025",
     "group": "recent",
@@ -22,7 +27,9 @@
   {
     "id": "lion-optimizer",
     "name": "lion optimizer paper recreation",
-    "type": "ml/ai",
+    "types": [
+      "ml/ai"
+    ],
     "description": "A recreation of the Lion Optimizer paper, a novel optimization algorithm for machine learning for NLP and CV tasks, under constrained hardware.",
     "date": "winter 2025",
     "group": "recent",
@@ -32,7 +39,9 @@
   {
     "id": "toronto-pathfinder",
     "name": "toronto pathfinder",
-    "type": "algorithms",
+    "types": [
+      "algorithms"
+    ],
     "description": "A route planning app using OpenStreetMap and A* to help cyclists find efficient routes while minimizing the chance of getting hit by a car.",
     "date": "summer 2024",
     "group": "recent",
@@ -42,7 +51,9 @@
   {
     "id": "terrasculpt",
     "name": "terrasculpt",
-    "type": "ml/ai",
+    "types": [
+      "ml/ai"
+    ],
     "description": "Explored generative and classification models in a unified vision pipeline to support environmental monitoring.",
     "date": "winter 2023",
     "group": "earlier",
@@ -52,7 +63,9 @@
   {
     "id": "persona-ai",
     "name": "persona.ai",
-    "type": "web",
+    "types": [
+      "web"
+    ],
     "description": "A SaaS platform to create and chat with customized LLM-powered personas.",
     "date": "fall 2023",
     "group": "earlier",
@@ -62,7 +75,9 @@
   {
     "id": "carkart",
     "name": "carkart marketplace",
-    "type": "web",
+    "types": [
+      "web"
+    ],
     "description": "A fullstack e-commerce platform to compare, buy, sell, and trade cars.",
     "date": "fall 2022",
     "group": "earlier",
@@ -72,7 +87,9 @@
   {
     "id": "soccer-injuries",
     "name": "underlying factors in soccer injuries",
-    "type": "ml/ai",
+    "types": [
+      "ml/ai"
+    ],
     "description": "Deep dive into soccer injury data and how it affects club success; Moneyball meets physiotherapy.",
     "date": "fall 2022",
     "group": "earlier",
@@ -82,7 +99,9 @@
   {
     "id": "metro-redesign",
     "name": "metro.ca ui/ux redesign",
-    "type": "ui/ux",
+    "types": [
+      "ui/ux"
+    ],
     "description": "Revamped the Canadian grocery store's terrible online store so that it is actually usable.",
     "date": "winter 2022",
     "group": "earlier",
@@ -92,7 +111,9 @@
   {
     "id": "stable-marriage",
     "name": "stable marriage problem solver",
-    "type": "algorithms",
+    "types": [
+      "algorithms"
+    ],
     "description": "Gale-Shapley algorithm tries to lower divorce rates.",
     "date": "fall 2021",
     "group": "earlier",

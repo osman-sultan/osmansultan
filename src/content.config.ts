@@ -10,7 +10,8 @@ const projects = defineCollection({
     z.object({
       id: z.string(),
       name: z.string(),
-      type: z.enum(["ml/ai", "web", "algorithms", "ui/ux"]),
+      // One or more tags; the first is the primary one.
+      types: z.array(z.enum(["ml/ai", "web", "algorithms", "ui/ux"])).min(1),
       description: z.string(),
       date: z.string(),
       group: z.enum(["recent", "earlier"]),

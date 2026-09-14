@@ -24,7 +24,7 @@ const groups = [
 ] as const
 
 // Filter chips, in order of first appearance.
-const types = ["all", ...new Set(projects.map((p) => p.data.type))]
+const types = ["all", ...new Set(projects.flatMap((p) => p.data.types))]
 
 const linkClass =
   "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
@@ -83,7 +83,7 @@ const linkClass =
                 <li
                   class="flex flex-col gap-2"
                   data-project
-                  data-type={data.type}
+                  data-type={data.types.join(" ")}
                 >
                   <a
                     href={data.link}
@@ -109,14 +109,16 @@ const linkClass =
                     >
                       {data.name}
                     </a>
-                    <span
-                      class={cn(
-                        badgeVariants({ variant: "outline" }),
-                        "rounded-none font-mono"
-                      )}
-                    >
-                      {data.type}
-                    </span>
+                    {data.types.map((type) => (
+                      <span
+                        class={cn(
+                          badgeVariants({ variant: "outline" }),
+                          "rounded-none font-mono"
+                        )}
+                      >
+                        {type}
+                      </span>
+                    ))}
                     <span class="font-mono text-xs text-muted-foreground">
                       {data.date}
                     </span>
@@ -149,7 +151,8 @@ const linkClass =
     page.querySelectorAll<HTMLElement>("[data-project-group]").forEach((g) => {
       let count = 0
       g.querySelectorAll<HTMLElement>("[data-project]").forEach((p) => {
-        const match = type === "all" || p.dataset.type === type
+        const match =
+          type === "all" || (p.dataset.type ?? "").split(" ").includes(type)
         p.hidden = !match
         if (match) count++
       })
