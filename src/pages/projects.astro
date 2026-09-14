@@ -76,12 +76,12 @@ const linkClass =
         return (
           <section class="flex flex-col gap-4" data-project-group>
             <h2 class="font-medium">{group.title}</h2>
-            {/* Masonry: cards keep their natural image heights and pack into
-                columns, so no space is left under a short card. */}
-            <ul class="columns-1 gap-6 sm:columns-2" role="list">
+            {/* Two columns in reading order (left to right, then down), so
+                newest-first stays newest-first on screen. */}
+            <ul class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2" role="list">
               {list.map(({ data }) => (
                 <li
-                  class="mb-8 flex break-inside-avoid flex-col gap-2"
+                  class="flex flex-col gap-2"
                   data-project
                   data-type={data.type}
                 >
