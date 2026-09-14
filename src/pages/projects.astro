@@ -9,7 +9,12 @@ import { cn } from "@/lib/utils"
 
 // The file loader returns entries in id order; show newest first instead,
 // reading the season and year out of each `date` ("summer 2026").
-const SEASON: Record<string, number> = { winter: 0, spring: 1, summer: 2, fall: 3 }
+const SEASON: Record<string, number> = {
+  winter: 0,
+  spring: 1,
+  summer: 2,
+  fall: 3,
+}
 const when = (date: string) => {
   const [season = "", year = "0"] = date.toLowerCase().split(" ")
   return Number(year) * 10 + (SEASON[season] ?? 0)
@@ -76,57 +81,83 @@ const linkClass =
         return (
           <section class="flex flex-col gap-4" data-project-group>
             <h2 class="font-medium">{group.title}</h2>
-            {/* Two columns in reading order (left to right, then down), so
-                newest-first stays newest-first on screen. */}
-            <ul class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2" role="list">
-              {list.map(({ data }) => (
-                <li
-                  class="flex flex-col gap-2"
-                  data-project
-                  data-type={data.types.join(" ")}
-                >
-                  <a
-                    href={data.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${data.name} (opens in a new tab)`}
-                    class="project-card block border border-border bg-card"
-                  >
-                    <Image
-                      src={data.image}
-                      alt=""
-                      widths={[360, 720]}
-                      sizes="(min-width: 640px) 336px, calc(100vw - 3rem)"
-                      class="block h-auto w-full"
-                    />
-                  </a>
-                  <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <a
-                      href={data.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class={cn(linkClass, "font-medium")}
-                    >
-                      {data.name}
-                    </a>
-                    {data.types.map((type) => (
-                      <span
-                        class={cn(
-                          badgeVariants({ variant: "outline" }),
-                          "rounded-none font-mono"
-                        )}
-                      >
-                        {type}
-                      </span>
-                    ))}
-                    <span class="font-mono text-xs text-muted-foreground">
-                      {data.date}
-                    </span>
-                  </div>
-                  <p class="text-muted-foreground">{data.description}</p>
-                </li>
+            {/* Masonry in reading order: newest first goes left, right, then
+                the next row. Cards alternate into two independent columns,
+                so each column packs to its own height (no gap under a short
+                card) while the order stays left-to-right. On phones the
+                columns dissolve (display: contents) and `order` puts the
+                cards back in one newest-first list. */}
+            <div class="flex flex-col gap-8 sm:grid sm:grid-cols-2 sm:gap-x-6">
+              {[0, 1].map((col) => (
+                <ul class="contents sm:flex sm:flex-col sm:gap-8" role="list">
+                  {list.map(
+                    ({ data }, i) =>
+                      i % 2 === col && (
+                        <li
+                          class="flex flex-col gap-2"
+                          style={`order: ${i}`}
+                          data-project
+                          data-type={data.types.join(" ")}
+                        >
+                          <a
+                            href={data.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${data.name} (opens in a new tab)`}
+                            class="project-card block border border-border bg-card"
+                          >
+                            {/* The first row of the first group is above the
+                                fold: load it eagerly, the rest lazily. */}
+                            <Image
+                              src={data.image}
+                              alt=""
+                              loading={
+                                group.key === "recent" && i < 2
+                                  ? "eager"
+                                  : "lazy"
+                              }
+                              fetchpriority={
+                                group.key === "recent" && i === 0
+                                  ? "high"
+                                  : undefined
+                              }
+                              widths={[360, 720]}
+                              sizes="(min-width: 640px) 336px, calc(100vw - 3rem)"
+                              class="block h-auto w-full"
+                            />
+                          </a>
+                          <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                            <a
+                              href={data.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class={cn(linkClass, "font-medium")}
+                            >
+                              {data.name}
+                            </a>
+                            {data.types.map((type) => (
+                              <span
+                                class={cn(
+                                  badgeVariants({ variant: "outline" }),
+                                  "rounded-none font-mono"
+                                )}
+                              >
+                                {type}
+                              </span>
+                            ))}
+                            <span class="font-mono text-xs text-muted-foreground">
+                              {data.date}
+                            </span>
+                          </div>
+                          <p class="text-muted-foreground">
+                            {data.description}
+                          </p>
+                        </li>
+                      )
+                  )}
+                </ul>
               ))}
-            </ul>
+            </div>
           </section>
         )
       })
