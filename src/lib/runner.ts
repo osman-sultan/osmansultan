@@ -87,9 +87,6 @@ const STORAGE_KEY = "sands-runner-best"
 // The rewind is always lit in the Sands of Time gold, whatever the theme.
 const REWIND_SAND = "#ffc23d"
 const REWIND_EDGE = "rgba(240, 147, 15, 0.45)"
-// Draw at most about this often: on a 144 or 240 Hz display the game would
-// otherwise render every refresh for no visible gain.
-const TARGET_FPS = 60
 // Redraw period while nothing moves (idle, dead, out of sand): enough for
 // the dagger's sheen and the blinking prompt.
 const IDLE_MS = 50
@@ -299,9 +296,9 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
       : PALETTES.light
   }
   applyTheme()
-  // Art is fetched for the theme on screen, on first use; the other theme's
-  // set follows once the page has settled, so a toggle never blanks the
-  // scenery for long.
+  // Art for the theme on screen is fetched, decoded and pre-scaled up front
+  // behind the loading screen (warm(), below); the other theme's is fetched
+  // and decoded once that is done, so a toggle never blanks the scenery.
   const images = new Map<string, HTMLImageElement>()
   function imageOf(meta: ImageMetadata) {
     let img = images.get(meta.src)
@@ -311,13 +308,6 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     }
     return img
   }
-  const prefetch = window.setTimeout(() => {
-    const night = palette === PALETTES.dark
-    for (const l of LAYERS) imageOf(night ? l.day : l.night)
-    for (const b of BUILDINGS) imageOf(night ? b.day : b.night)
-    for (const p of PROPS) imageOf(night ? p.day : p.night)
-    imageOf(night ? skyDay : skyNight)
-  }, 4000)
   let devScale = 1 // device px per logical px, set in resize()
   // Snap a logical coordinate to a device pixel, so a bitmap copies 1:1.
   const snap = (v: number) => Math.round(v * devScale) / devScale
@@ -344,8 +334,8 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   })
   // One set per theme, so a toggle swaps sets instead of rebuilding one.
   const tiles = { day: emptyTiles(), night: emptyTiles() }
-  function tileSet() {
-    const key = palette === PALETTES.dark ? "night" : "day"
+  function tileSet(night = palette === PALETTES.dark) {
+    const key = night ? "night" : "day"
     if (tiles[key].scale !== devScale) tiles[key] = emptyTiles(devScale)
     return tiles[key]
   }
@@ -467,6 +457,131 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     attributes: true,
     attributeFilter: ["class"],
   })
+
+  // --- Loading ----------------------------------------------------------------
+  //
+  // Decoding an image and pre-scaling it into a tile takes a few ms each.
+  // Done on first use, that landed in whichever frame first showed a new
+  // roof or prop, so the first run hitched as each piece scrolled in. Instead
+  // it all happens here, one piece per task so no frame waits on more than
+  // one, behind a loading screen; the scene fades in once it is done.
+
+  const FADE_MS = reducedMotion ? 0 : 350 // loading screen fade-out
+  let ready = false
+  let readyAt = 0 // when the loading screen started fading (0: not yet)
+  let loadProgress = 0 // 0..1, work done
+  let shownProgress = 0 // 0..1, what the bar shows (eases toward loadProgress)
+  let startQueued = false // space or a tap during loading: run once ready
+  let disposed = false
+
+  // Everything one theme draws, as image metadata.
+  const artFor = (night: boolean) => [
+    night ? skyNight : skyDay,
+    ...LAYERS.map((l) => (night ? l.night : l.day)),
+    ...BUILDINGS.map((b) => (night ? b.night : b.day)),
+    ...PROPS.map((p) => (night ? p.night : p.day)),
+    princeAtlas,
+    daggerEmpty,
+    daggerFull,
+  ]
+  // Fetch and decode (a failed image just keeps its stand-in when drawn).
+  const decode = (meta: ImageMetadata) =>
+    imageOf(meta)
+      .decode()
+      .catch(() => {})
+  const nextTask = () => new Promise((r) => setTimeout(r, 0))
+
+  async function warm() {
+    const night = palette === PALETTES.dark
+    const art = artFor(night)
+    // Decoding is 60% of the bar, building the tiles the rest.
+    let decoded = 0
+    await Promise.all(
+      art.map((meta) =>
+        decode(meta).then(() => {
+          loadProgress = (0.6 * ++decoded) / art.length
+          redrawIfIdle()
+        })
+      )
+    )
+    const jobs: (() => unknown)[] = [
+      () => tileOf(tileSet(night).sky, 0, imageOf(art[0]!), W),
+      ...LAYERS.map(
+        (l, i) => () =>
+          tileOf(
+            tileSet(night).layers,
+            i,
+            imageOf(night ? l.night : l.day),
+            l.width
+          )
+      ),
+      ...BUILDINGS.map(
+        (b, i) => () =>
+          tileOf(
+            tileSet(night).buildings,
+            i,
+            imageOf(night ? b.night : b.day),
+            b.w
+          )
+      ),
+      ...PROPS.map(
+        (p, i) => () =>
+          tileOf(tileSet(night).props, i, imageOf(night ? p.night : p.day), p.w)
+      ),
+      () => tileOf(tileSet(night).hud, 0, imageOf(daggerEmpty), DAGGER_W),
+      () => tileOf(tileSet(night).hud, 1, imageOf(daggerFull), DAGGER_W),
+      // Every prince frame, and the run frames again as rewind afterimages.
+      ...(Object.keys(PRINCE) as PrinceRow[]).flatMap((row) =>
+        PRINCE[row].map((_, i) => () => princeSprite(row, i))
+      ),
+      ...RUN_CYCLE.map((i) => () => princeSprite("run", i, REWIND_SAND)),
+    ]
+    for (const [k, job] of jobs.entries()) {
+      if (disposed) return
+      await nextTask()
+      job()
+      loadProgress = 0.6 + (0.4 * (k + 1)) / jobs.length
+      redrawIfIdle()
+    }
+    ready = true
+    if (reducedMotion) readyAt = performance.now()
+    if (startQueued) {
+      reset()
+      state = "running"
+    }
+    // Under reduced motion the loop still waits for the first input.
+    if (awake || startQueued) wake()
+    else draw()
+    // The other theme's art, fetched and decoded for a quick toggle.
+    setTimeout(() => {
+      if (!disposed) for (const meta of artFor(!night)) void decode(meta)
+    }, 3000)
+  }
+
+  // Shown while warm() runs and faded out after: the sky's colours, a label
+  // and a bar of sand filling up.
+  function drawLoading(c: CanvasRenderingContext2D, alpha: number) {
+    const pal = palette
+    c.globalAlpha = alpha
+    c.fillStyle = skyGradient(c, pal)
+    c.fillRect(0, 0, VW, H)
+    const bw = Math.min(120, VW * 0.45)
+    const bx = (VW - bw) / 2
+    const by = H / 2 - 8
+    // The empty track, faint in the text colour so it reads on either sky.
+    c.fillStyle = pal.text
+    c.globalAlpha = alpha * 0.2
+    c.beginPath()
+    c.roundRect(bx, by, bw, 4, 2)
+    c.fill()
+    c.globalAlpha = alpha
+    c.fillStyle = pal.sand
+    c.beginPath()
+    c.roundRect(bx, by, Math.max(4, bw * shownProgress), 4, 2)
+    c.fill()
+    text("loading", VW / 2, by - 20, "center", FONT_HUD, pal.text)
+    c.globalAlpha = 1
+  }
 
   // --- World -----------------------------------------------------------------
 
@@ -875,16 +990,52 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     )
   }
 
+  // Particle batches: FADE_STEPS opacity steps for dust, then as many for
+  // the rewind's sand (see draw()).
+  const FADE_STEPS = 8
+  const fadeBuckets: Particle[][] = Array.from(
+    { length: FADE_STEPS * 2 },
+    () => []
+  )
+
   // Gradients that never change, made once.
   const skyGradients = new Map<Palette, CanvasGradient>()
+  function skyGradient(c: CanvasRenderingContext2D, pal: Palette) {
+    let sky = skyGradients.get(pal)
+    if (!sky) {
+      sky = c.createLinearGradient(0, 0, 0, GROUND)
+      sky.addColorStop(0, pal.sky[0])
+      sky.addColorStop(1, pal.sky[1])
+      skyGradients.set(pal, sky)
+    }
+    return sky
+  }
   let vignette: CanvasGradient | null = null
 
+  let lastDraw = 0
   function draw() {
     const c = ctx!
     if (!canvas.width) return // no layout box (hidden): nothing to draw into
     const pal = palette
     const set = tileSet()
     const night = pal === PALETTES.dark
+
+    // Loading screen: the bar eases toward the work done, so it fills
+    // smoothly rather than in jumps, and the fade starts once it is full.
+    const now = performance.now()
+    const dt = Math.min(0.1, (now - lastDraw) / 1000)
+    lastDraw = now
+    shownProgress = reducedMotion
+      ? loadProgress
+      : shownProgress + (loadProgress - shownProgress) * Math.min(1, dt * 8)
+    if (ready && !readyAt && shownProgress > 0.98) readyAt = now
+    const cover = readyAt
+      ? 1 - Math.min(1, (now - readyAt) / (FADE_MS || 1))
+      : 1
+    if (!readyAt) {
+      drawLoading(c, 1)
+      return
+    }
 
     // Sky backdrop: a painted image cut to the canvas shape (sun or moon
     // and stars included); a plain gradient stands in until it has loaded.
@@ -893,14 +1044,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     const skyTile = tileOf(set.sky, 0, imageOf(night ? skyNight : skyDay), W)
     if (skyTile) c.drawImage(skyTile, VW - W, 0, W, H)
     else {
-      let sky = skyGradients.get(pal)
-      if (!sky) {
-        sky = c.createLinearGradient(0, 0, 0, GROUND)
-        sky.addColorStop(0, pal.sky[0])
-        sky.addColorStop(1, pal.sky[1])
-        skyGradients.set(pal, sky)
-      }
-      c.fillStyle = sky
+      c.fillStyle = skyGradient(c, pal)
       c.fillRect(0, 0, VW, H)
     }
 
@@ -925,7 +1069,10 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
         const img = imageOf(night ? b.night : b.day)
         const tile = tileOf(set.buildings, part.idx, img, b.w)
         if (tile) {
-          const x = Math.round(sx + part.x)
+          // Snapped to a device pixel, not a logical one: whole logical px
+          // are 2-4 device px, so the roofs stepped unevenly (2, 3, 2, 3 px
+          // a frame) against the smoothly sliding backdrop.
+          const x = snap(sx + part.x)
           c.drawImage(tile, x, top - b.roof, b.w, b.h)
           // The piece is only the top of a building: continue its wall to
           // the bottom of the canvas.
@@ -946,7 +1093,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
         const prop = PROPS[pr.idx]!
         const img = imageOf(night ? prop.night : prop.day)
         const tile = tileOf(set.props, pr.idx, img, prop.w)
-        const x = Math.round(sx + pr.x)
+        const x = snap(sx + pr.x)
         if (tile) c.drawImage(tile, x, top - prop.h, prop.w, prop.h)
         else {
           c.fillStyle = pal.outline
@@ -968,14 +1115,28 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     }
     c.globalAlpha = 1
 
-    // Dust and sand streaks.
-    for (const p of particles) {
-      c.globalAlpha = 1 - p.life / p.max
-      c.fillStyle = p.float ? REWIND_SAND : pal.sand
-      if (p.len) c.fillRect(p.x, p.y, p.len, p.size)
-      else c.fillRect(p.x, p.y, p.size, p.size)
+    // Dust and sand streaks. A rewind keeps about 800 alive, so instead of a
+    // fillRect (and a state change) each, they are sorted into a few fade
+    // steps per colour and each step is filled as one path.
+    if (particles.length) {
+      for (const b of fadeBuckets) b.length = 0
+      for (const p of particles) {
+        const fade = Math.min(FADE_STEPS - 1, (FADE_STEPS * p.life) / p.max) | 0
+        fadeBuckets[(p.float ? FADE_STEPS : 0) + fade]!.push(p)
+      }
+      fadeBuckets.forEach((bucket, i) => {
+        if (!bucket.length) return
+        const float = i >= FADE_STEPS
+        c.globalAlpha = 1 - ((i % FADE_STEPS) + 0.5) / FADE_STEPS
+        c.fillStyle = float ? REWIND_SAND : pal.sand
+        c.beginPath()
+        for (const p of bucket) {
+          c.rect(p.x, p.y, p.len ?? p.size, p.size)
+        }
+        c.fill()
+      })
+      c.globalAlpha = 1
     }
-    c.globalAlpha = 1
 
     // The prince, with a soft shadow so he separates from the city behind.
     c.fillStyle = "rgba(0, 0, 0, 0.35)"
@@ -1093,6 +1254,9 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
         pal.muted
       )
     }
+
+    // The loading screen fading out over the scene.
+    if (cover > 0) drawLoading(c, cover)
   }
 
   /** Tile a layer across the width; every other copy is mirrored so the
@@ -1110,7 +1274,9 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     const firstIndex = Math.floor(par / w)
     c.globalAlpha = alpha
     for (let k = firstIndex; (k - firstIndex) * w - (par % w) < VW; k++) {
-      const x = k * w - par
+      // Device-pixel aligned, so the pre-scaled tile copies 1:1 instead of
+      // being resampled (and shimmering) at a fractional offset each frame.
+      const x = snap(k * w - par)
       if (k % 2 === 0) {
         c.drawImage(img, x, bottom - height, w, height)
       } else {
@@ -1163,6 +1329,10 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   // --- Input ------------------------------------------------------------------
 
   function jumpPress() {
+    if (!ready) {
+      startQueued = true // warm() starts the run when it is done
+      return
+    }
     if (state === "idle" || state === "over") {
       reset()
       state = "running"
@@ -1265,10 +1435,11 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
 
   // --- Loop -------------------------------------------------------------------
   //
-  // While running or rewinding the game draws on requestAnimationFrame,
-  // every n-th tick so a high-refresh display gets TARGET_FPS or a little
-  // more (72 on a 144 Hz panel, 60 on 240 Hz, 90 on 90 Hz). Otherwise it
-  // sleeps on a timer and redraws every IDLE_MS, so an idle page costs
+  // While running or rewinding the game draws on every requestAnimationFrame
+  // tick, so a 120 Hz display gets 120 fps: a scrolling scene at half the
+  // refresh rate visibly judders. (It used to draw every n-th tick to cap the
+  // rate near 60, which on a ProMotion Mac halved the smoothness.) Otherwise
+  // it sleeps on a timer and redraws every IDLE_MS, so an idle page costs
   // nothing between ticks.
 
   let raf = 0
@@ -1276,16 +1447,31 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   let last = 0
   let visible = true
   let awake = !reducedMotion // under reduced motion, wait for the first input
-  let skip = 1 // draw every n-th tick while active
-  let tick = 0
-  let lastTick = 0
-  const intervals: number[] = [] // recent tick spacing, to size `skip`
 
-  // Mirrored on the element for styling, tests and assistive tech.
+  // Mirrored on the element for styling, tests and assistive tech. Written
+  // only on change: a data-* write invalidates style, every frame otherwise.
+  const mirrored = { state: "", dist: "", sand: "" }
   function mirror() {
-    canvas.dataset.runnerState = state
-    canvas.dataset.runnerDist = String(Math.floor(dist))
-    canvas.dataset.runnerSand = sand.toFixed(2)
+    const d = String(Math.floor(dist))
+    const s = sand.toFixed(1)
+    if (mirrored.state !== state) canvas.dataset.runnerState = state
+    if (mirrored.dist !== d) canvas.dataset.runnerDist = d
+    if (mirrored.sand !== s) canvas.dataset.runnerSand = s
+    mirrored.state = state
+    mirrored.dist = d
+    mirrored.sand = s
+  }
+
+  // Tells the title's sand shader (sands.ts), whose canvas covers this one,
+  // to drop its frame rate while a run is on.
+  let announced = false
+  function announce() {
+    const active = visible && isActive()
+    if (active === announced) return
+    announced = active
+    window.dispatchEvent(
+      new CustomEvent("sands-runner:active", { detail: active })
+    )
   }
 
   function resize() {
@@ -1317,40 +1503,16 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   })
   sizeObserver.observe(canvas)
 
-  const isActive = () => state === "running" || state === "rewinding"
+  // Running, rewinding, or the loading screen still up or fading out.
+  const isActive = () =>
+    state === "running" ||
+    state === "rewinding" ||
+    !readyAt ||
+    performance.now() - readyAt < FADE_MS
 
   function frame(now: number) {
     raf = 0
     if (!visible) return
-    if (isActive()) {
-      // Refresh rate from the spacing of the last 30 ticks (the median
-      // shrugs off a hitch), re-read every 30 ticks in case the window
-      // has moved to another display.
-      const gap = now - lastTick
-      if (lastTick && gap > 1 && gap < 100) {
-        intervals.push(gap)
-        if (intervals.length > 30) intervals.shift()
-      }
-      lastTick = now
-      tick++
-      if (intervals.length >= 10 && tick % 30 === 0) {
-        const sorted = [...intervals].sort((a, b) => a - b)
-        const hz = 1000 / sorted[sorted.length >> 1]!
-        // The largest n that keeps the drawn rate at or above the target
-        // (the 0.1 absorbs a 120 Hz panel measuring as 119).
-        skip = Math.max(1, Math.floor(hz / TARGET_FPS + 0.1))
-      }
-      if (tick % skip) {
-        raf = requestAnimationFrame(frame)
-        return
-      }
-    } else {
-      // Start the next run fresh: its first tick draws, and the refresh
-      // rate is measured again in case the window has moved.
-      lastTick = 0
-      tick = -1
-      intervals.length = 0
-    }
     const dt = Math.min((now - last) / 1000, 1 / 30) || 1 / 60
     last = now
     step(dt)
@@ -1364,6 +1526,7 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     }
     draw()
     mirror()
+    announce()
     schedule()
   }
   function schedule() {
@@ -1396,10 +1559,16 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
     }
     if (!raf && visible) raf = requestAnimationFrame(frame)
   }
+  // warm()'s progress, drawn when the loop is not running to show it
+  // (under reduced motion it waits for the first input).
+  function redrawIfIdle() {
+    if (!raf && !timer && visible) draw()
+  }
   const visibility = new IntersectionObserver((entries) => {
     visible = entries[entries.length - 1]?.isIntersecting ?? true
     if (visible) start()
     else stop()
+    announce()
   })
   visibility.observe(canvas)
 
@@ -1410,10 +1579,13 @@ export function initSandsRunner(canvas: HTMLCanvasElement) {
   // Under reduced motion the idle sheen stays still until the first input
   // (start() is gated on `awake`, which only wake() sets).
   start()
+  void warm()
 
   return function dispose() {
     stop()
-    clearTimeout(prefetch)
+    visible = false
+    announce()
+    disposed = true
     visibility.disconnect()
     sizeObserver.disconnect()
     themeObserver.disconnect()

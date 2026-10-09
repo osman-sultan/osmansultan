@@ -918,10 +918,25 @@ export function initSandsTitle(root: HTMLElement) {
     renderer.render(scene, camera)
   }
 
+  // While the rooftop runner below is being played (runner.ts dispatches
+  // sands-runner:active), the shader drops to about 30 fps. Its canvas
+  // covers the game, and the noise drifts slowly enough that the halved rate
+  // does not show, but at full rate it took GPU time the game needed.
+  const PLAYING_FRAME_MS = 1000 / 30 - 2
+  let runnerActive = false
+  const onRunner = (e: Event) => {
+    runnerActive = (e as CustomEvent<boolean>).detail
+  }
+  window.addEventListener("sands-runner:active", onRunner)
+
   let lastLayoutCheck = 0
   function step(now: number) {
     if (!root.isConnected) {
       raf = 0
+      return
+    }
+    if (runnerActive && now - last < PLAYING_FRAME_MS) {
+      raf = visible ? requestAnimationFrame(step) : 0
       return
     }
     const dt = frozen ? 0 : Math.min((now - last) / 1000, 1 / 20) || 1 / 60
@@ -984,6 +999,7 @@ export function initSandsTitle(root: HTMLElement) {
     visibility.disconnect()
     sizeObserver.disconnect()
     themeObserver.disconnect()
+    window.removeEventListener("sands-runner:active", onRunner)
     window.removeEventListener("resize", scheduleResize)
     window.removeEventListener("orientationchange", scheduleResize)
     document.fonts.removeEventListener("loadingdone", scheduleResize)

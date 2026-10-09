@@ -294,8 +294,35 @@
   }
 }
 
+/* Rooftop runner skeleton: a soft shimmer across the empty canvas until the
+   game script boots (it sets data-runner-state on its first frame, which
+   then draws its own loading screen over this). */
+[data-runner-canvas]:not([data-runner-state]) {
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in oklch, var(--foreground) 7%, transparent) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: runner-skeleton 1.6s ease-in-out infinite;
+}
+
+@keyframes runner-skeleton {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sands-letters {
+    animation: none;
+  }
+
+  [data-runner-canvas] {
     animation: none;
   }
 
