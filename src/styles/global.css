@@ -377,13 +377,29 @@ html::view-transition-new(site-title) {
   html {
     @apply font-serif;
     min-height: 100%;
-    /* Page gradient; the grain is the NoiseTexture layer in the layout. */
+    /* The page gradient is the fixed layer below; the grain is the
+       NoiseTexture layer in the layout. */
     background-color: var(--background);
-    background-image: var(--surface-gradient);
-    background-repeat: no-repeat;
     /* Decorative layers (the hero sand) may spill past the content column;
        clip at the viewport rather than adding a horizontal scrollbar. */
     overflow-x: clip;
+    }
+  /* Page gradient, sized to the viewport and fixed there, so every page
+     shows the same surface. Painted on <html> itself it stretched to the
+     document's height: the short home page got the whole run while a long
+     post spread it over thousands of px and read as one flat colour. 100lvh
+     keeps it from resizing as a phone's toolbar shows and hides. */
+  html::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100lvh;
+    z-index: -20;
+    pointer-events: none;
+    background-image: var(--surface-gradient);
+    background-repeat: no-repeat;
     }
 }
   ::view-transition-old(root), ::view-transition-new(root) {
