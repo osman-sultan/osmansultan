@@ -106,13 +106,17 @@ const linkClass =
                             aria-label={`${data.name} (opens in a new tab)`}
                             class="project-card block border border-border bg-card"
                           >
-                            {/* The first row of the first group is above the
-                                fold: load it eagerly, the rest lazily. */}
+                            {/* The first two rows of the first group are on
+                                screen at every tablet and desktop size from
+                                768x1024 up (the columns pack to different
+                                heights, so the second row starts well inside
+                                the viewport): load them eagerly, the rest
+                                lazily. */}
                             <Image
                               src={data.image}
                               alt=""
                               loading={
-                                group.key === "recent" && i < 2
+                                group.key === "recent" && i < 4
                                   ? "eager"
                                   : "lazy"
                               }
