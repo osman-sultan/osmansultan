@@ -19,7 +19,7 @@ const linkClass =
   "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
 
 const description =
-  "Atrios pays people to recommend products to their friends. Companies that want customers list themselves on Atrios; a well-connected person sees one, thinks of a friend who needs it, and makes the introduction."
+  "Atrios helps businesses get exclusive perks, discounts, and incentives on software they’re already buying. Vendors gain access to high-intent customers, while tastemakers earn rewards for connecting the two."
 
 const HOVER_QUERY = "(hover: hover) and (pointer: fine)"
 
