@@ -12,7 +12,7 @@
  * opening's height match the canvas's 8:5 shape. The percentages below are
  * all of the figure's width.
  */
-import { getImage } from "astro:assets"
+import { Image, getImage } from "astro:assets"
 import frameLight from "@/assets/game/frame-light.webp"
 import frameDark from "@/assets/game/frame-dark.webp"
 import framePortraitLight from "@/assets/game/frame-portrait-light.webp"
@@ -23,6 +23,9 @@ import framePortraitDark from "@/assets/game/frame-portrait-dark.webp"
 // the pillars extended by scripts/make-portrait-frame.mjs) on phones, where the canvas is a thumb-friendly 776:985. The top
 // and bottom bars are identical in both, so the padding and margins that
 // place the canvas in the opening are the same percentages of the width.
+// Astro's <Picture> cannot switch source images by media query, so the
+// landscape <source> is cut with getImage() and the portrait fallback is an
+// <Image> inside a hand-written <picture>.
 const frameClass =
   "pointer-events-none absolute inset-x-0 top-0 aspect-[991/1110] w-full select-none sm:aspect-[991/610]"
 // The figure spans the main column: the full viewport on phones, at most
@@ -33,8 +36,8 @@ const frameSizes = "(min-width: 768px) 34rem, (min-width: 640px) calc(100vw - 3r
 const cut = (src: ImageMetadata) =>
   getImage({ src, widths: frameWidths, format: "webp" })
 const frames = {
-  light: { landscape: await cut(frameLight), portrait: await cut(framePortraitLight) },
-  dark: { landscape: await cut(frameDark), portrait: await cut(framePortraitDark) },
+  light: { landscape: await cut(frameLight), portrait: framePortraitLight },
+  dark: { landscape: await cut(frameDark), portrait: framePortraitDark },
 }
 ---
 
@@ -48,15 +51,15 @@ const frames = {
       class="ml-[10.7%] block aspect-[776/985] w-[78.3%] touch-none bg-card/30 select-none sm:aspect-[8/5]"
       width="400"
       height="500"
-      tabindex="0"
       role="img"
       aria-label="Sands of Time runner mini-game. Press space or tap to jump over rooftop gaps and clutter; hold R or hold the dagger to rewind time, even mid-run."
       data-runner-canvas></canvas>
     <!-- <picture> picks the cut for the viewport, so only one is fetched.
-         The light one is the home page's largest paint and loads eagerly at
-         high priority. The dark one is display:none under the light theme;
-         lazy loading keeps the browser from fetching it there, while in dark
-         mode it sits in the viewport and loads right after layout. -->
+         Both themes' frames ship lazy, so the browser fetches neither up
+         front; the script after them promotes the one for the current theme
+         (set in <head> by ThemeScript) to eager at high priority, since it
+         is the home page's largest paint. The other is display:none and,
+         being lazy, is only fetched if the theme is toggled. -->
     {
       (["light", "dark"] as const).map((theme) => (
         <picture class={theme === "light" ? "contents dark:hidden" : "hidden dark:contents"}>
@@ -67,22 +70,35 @@ const frames = {
             width={frames[theme].landscape.attributes.width}
             height={frames[theme].landscape.attributes.height}
           />
-          <img
-            src={frames[theme].portrait.src}
-            srcset={frames[theme].portrait.srcSet.attribute}
+          <Image
+            src={frames[theme].portrait}
+            widths={frameWidths}
             sizes={frameSizes}
-            width={frames[theme].portrait.attributes.width}
-            height={frames[theme].portrait.attributes.height}
+            format="webp"
             alt=""
             aria-hidden="true"
-            loading={theme === "light" ? "eager" : "lazy"}
-            fetchpriority={theme === "light" ? "high" : "auto"}
+            loading="lazy"
             decoding="async"
             class={frameClass}
+            data-frame-theme={theme}
           />
         </picture>
       ))
     }
+    <script is:inline>
+      {
+        const theme = document.documentElement.classList.contains("dark")
+          ? "dark"
+          : "light"
+        const img = document.currentScript?.parentElement?.querySelector(
+          `img[data-frame-theme="${theme}"]`
+        )
+        if (img) {
+          img.fetchPriority = "high"
+          img.loading = "eager"
+        }
+      }
+    </script>
   </div>
   <figcaption class="px-6 text-xs text-muted-foreground sm:px-0">
     <span class="hidden sm:inline">
