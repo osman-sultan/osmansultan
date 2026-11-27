@@ -1,12 +1,13 @@
 ---
 import Layout from "@/layouts/main.astro"
 import { ResumeViewer } from "@/components/resume-viewer"
+import { RESUME_PDF_URL } from "@/lib/api"
 
 const linkClass =
   "text-link underline underline-offset-4 transition-opacity hover:opacity-70"
 
-// Built by CI from resume/resume.tex (see .github/workflows/resume.yml).
-const pdf = "/resume.pdf"
+// Served by the resume API, where /admin uploads it (see backend/).
+const pdf = RESUME_PDF_URL
 
 const description =
   "Resume of Osman Sultan: software engineer at Atrios, MS in Computer Science at Georgia Tech, BASc in Industrial Engineering from the University of Toronto."
@@ -19,7 +20,8 @@ const description =
       <a
         href={pdf}
         class={`${linkClass} font-mono text-xs`}
-        download="Osman Sultan - Resume.pdf">download pdf</a
+        download="Osman Sultan - Resume.pdf"
+        data-resume-download>download pdf</a
       >
     </div>
 
@@ -34,3 +36,28 @@ const description =
     </noscript>
   </section>
 </Layout>
+
+<script>
+  // The PDF lives on the API's origin, and browsers ignore `download` on a
+  // cross-origin link (they open the file instead). Fetch it and save the
+  // copy, so the link still downloads; if that fails, just open it.
+  document.addEventListener("click", async (event) => {
+    const link = (event.target as Element | null)?.closest<HTMLAnchorElement>(
+      "a[data-resume-download]"
+    )
+    if (!link) return
+    event.preventDefault()
+    try {
+      const response = await fetch(link.href)
+      if (!response.ok) throw new Error(String(response.status))
+      const url = URL.createObjectURL(await response.blob())
+      const save = document.createElement("a")
+      save.href = url
+      save.download = link.download
+      save.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      window.location.href = link.href
+    }
+  })
+</script>

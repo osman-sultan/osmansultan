@@ -12,6 +12,7 @@ import merriweatherUrl from "@fontsource-variable/merriweather/files/merriweathe
 import outfitUrl from "@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url"
 import ThemeScript from "@/components/theme-script.astro"
 import PostHog from "@/components/posthog.astro"
+import CheatCode from "@/components/cheat-code.astro"
 import { NoiseTexture } from "@/components/ui/noise-texture"
 
 interface Props {
@@ -38,8 +39,20 @@ const ogImageUrl = new URL("/og.png", Astro.site)
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="preload" href={merriweatherUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={outfitUrl} as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href={merriweatherUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={outfitUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <!-- PostHog SDK origins (see posthog.astro). -->
     <link rel="preconnect" href="https://us.i.posthog.com" />
     <link rel="preconnect" href="https://us-assets.i.posthog.com" />
@@ -47,8 +60,16 @@ const ogImageUrl = new URL("/og.png", Astro.site)
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#c7e3f1" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#060e16" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#c7e3f1"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#060e16"
+    />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="canonical" href={canonicalUrl} />
     <title>{pageTitle}</title>
@@ -73,6 +94,7 @@ const ogImageUrl = new URL("/og.png", Astro.site)
          (transition:name="site-title") instead of the page reloading. -->
     <ClientRouter />
     <PostHog />
+    <CheatCode />
     <Font cssVariable="--font-prince-of-persia" preload />
     <slot name="head" />
   </head>

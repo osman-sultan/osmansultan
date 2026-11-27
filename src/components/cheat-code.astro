@@ -1,0 +1,35 @@
+---
+/**
+ * A cheat code. Type it anywhere on the site (outside a text field) to jump
+ * to /admin, which is linked from nowhere. It is the invincibility code from
+ * the original LEGO Star Wars. This is a shortcut, not a lock: the sign-in on
+ * /admin is what keeps people out.
+ */
+---
+
+<script>
+  import { navigate } from "astro:transitions/client"
+
+  const CODE = "4PR28U"
+  let typed = ""
+
+  window.addEventListener("keydown", (event) => {
+    if (event.metaKey || event.ctrlKey || event.altKey) return
+    const target = event.target
+    if (
+      target instanceof HTMLElement &&
+      (target.isContentEditable ||
+        ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+    ) {
+      typed = ""
+      return
+    }
+    if (event.key.length !== 1) return
+
+    typed = (typed + event.key.toUpperCase()).slice(-CODE.length)
+    if (typed === CODE) {
+      typed = ""
+      navigate("/admin")
+    }
+  })
+</script>
