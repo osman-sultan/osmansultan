@@ -6,8 +6,10 @@ import "react-pdf/dist/Page/TextLayer.css"
 
 // PDF.js renders in a worker; Vite emits it as its own file next to the
 // page scripts, so it is served from this origin and allowed by the CSP.
+// The legacy build, like the main library (see astro.config.mjs): the
+// default one throws on WebKit, so on iPhones the resume never rendered.
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
+  "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
   import.meta.url
 ).toString()
 
@@ -68,7 +70,15 @@ export function ResumeViewer({ file }: { file: string }) {
           onLoadSuccess={({ numPages }) => setPages(numPages)}
           onLoadError={fail}
           onSourceError={fail}
-          loading={<Sheet>loading the pdf…</Sheet>}
+          loading={
+            <Sheet>
+              loading the pdf… or{" "}
+              <a href={file} className={linkClass}>
+                open it directly
+              </a>
+              .
+            </Sheet>
+          }
           noData={<Sheet>no pdf.</Sheet>}
         >
           {width

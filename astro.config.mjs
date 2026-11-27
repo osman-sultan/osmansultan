@@ -21,6 +21,24 @@ export default defineConfig({
     // finds it on the first visit to /resume, rebundles mid-navigation and
     // aborts the island's import, which leaves the page on "loading the pdf".
     optimizeDeps: { include: ["react-pdf"] },
+    // PDF.js's default build calls brand-new built-ins with no fallback
+    // (Map.prototype.getOrInsertComputed, Math.sumPrecise, Promise.try), so
+    // on WebKit (Safari, and every browser on iOS) it throws and the resume
+    // never renders. The legacy build polyfills them. react-pdf imports the
+    // bare package and the viewer module; point both at it. The worker is
+    // chosen in resume-viewer.tsx.
+    resolve: {
+      alias: [
+        {
+          find: /^pdfjs-dist$/,
+          replacement: "pdfjs-dist/legacy/build/pdf.mjs",
+        },
+        {
+          find: /^pdfjs-dist\/web\/pdf_viewer\.mjs$/,
+          replacement: "pdfjs-dist/legacy/web/pdf_viewer.mjs",
+        },
+      ],
+    },
   },
   // mdx: logbook posts can import components (see src/content/logbook).
   // Its code fences are rendered by the CodeBlock island (code-fence.astro),
