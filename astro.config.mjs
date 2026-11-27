@@ -43,7 +43,12 @@ export default defineConfig({
   // mdx: logbook posts can import components (see src/content/logbook).
   // Its code fences are rendered by the CodeBlock island (code-fence.astro),
   // which highlights on the client, so Shiki is off for .mdx only.
-  integrations: [react(), mdx({ syntaxHighlight: false }), sitemap()],
+  integrations: [
+    react(),
+    mdx({ syntaxHighlight: false }),
+    // /admin is for one person; keep it out of the sitemap.
+    sitemap({ filter: (page) => !new URL(page).pathname.startsWith("/admin") }),
+  ],
   markdown: {
     // Logbook code blocks. Both themes are emitted as CSS variables and
     // global.css picks one by the `.dark` class (no default colour).

@@ -1,0 +1,44 @@
+[project]
+name = "resume-api"
+version = "0.1.0"
+description = "Admin API for osmansultan.xyz: upload the resume PDF and keep its version history."
+# Matches the Lambda runtime in sst.config.ts.
+requires-python = ">=3.14"
+dependencies = [
+    "authlib>=1.9.10",
+    "boto3>=1.44.12",
+    "fastapi>=0.165.0",
+    "httpx2>=2.16.2",
+    "itsdangerous>=2.2.0",
+    "mangum>=0.22.0",
+    "pydantic>=2.14.4",
+    "pydantic-settings>=2.16.3",
+    "python-multipart>=0.0.34",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.7,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "boto3-stubs[s3]>=1.44.12",
+    "moto[s3,server]>=5.2.6",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+    "ty>=0.0.112",
+    "uvicorn>=0.54.0",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "S", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests assert, and use throwaway passwords.
+"tests/**" = ["S101", "S105", "S106"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
